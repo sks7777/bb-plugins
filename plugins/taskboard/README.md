@@ -18,7 +18,8 @@
 ![Taskboard inside BB](https://raw.githubusercontent.com/MateoCerquetella/bb-plugins/main/docs/media/hero.png)
 
 Taskboard brings external issues into the place where the work happens. Pick
-exactly one tracker for each BB project, browse a quiet List or Kanban view,
+exactly one tracker for each BB project — GitHub, GitLab, Linear, Jira, or the
+BB Tasks plugin — browse a quiet List or Kanban view,
 open live task details, move work through real provider statuses, and hand a
 task to an agent without rebuilding context by hand.
 
@@ -76,7 +77,7 @@ Taskboard is a full-trust BB plugin. Review the source, then install its trackin
 Git release directly from this monorepo:
 
 ```sh
-bb plugin install git:https://github.com/MateoCerquetella/bb-plugins.git@^0.3.3 --subdirectory plugins/taskboard --tag-prefix taskboard/
+bb plugin install git:https://github.com/MateoCerquetella/bb-plugins.git@^0.4.0 --subdirectory plugins/taskboard --tag-prefix taskboard/
 ```
 
 After [the BB Community entry](https://github.com/get-bb/marketplace/pull/129)
@@ -127,6 +128,20 @@ that window; they appear in the collapsed finished groups.
 
 Choose Jira, then provide the project's Atlassian Cloud URL, account email, API
 token, and JQL. Only HTTPS `*.atlassian.net` origins are accepted.
+
+### BB Tasks
+
+Choose BB Tasks to track work in the official Tasks plugin
+(`bb plugin install tasks`). Taskboard reuses the Tasks tracker project linked
+to the BB project (`bb tasks project create --link-bb-project <proj_id>`);
+when none is linked, pick the project in **Manage**. There are no credentials
+to store and no extra tokens — the Tasks plugin owns its data.
+
+Tasks statuses (backlog, todo, in_progress, in_review, done, canceled) map to
+Taskboard's workflow columns; `in_review` shares the In Progress category.
+Creating an issue from Taskboard calls `bb tasks create` under the hood and
+hands the new key (for example `PROD-12`) to the composer mention. Status
+moves from Taskboard appear live in the Tasks app and vice versa.
 
 ![Taskboard across projects](https://raw.githubusercontent.com/MateoCerquetella/bb-plugins/main/docs/media/across-projects.png)
 

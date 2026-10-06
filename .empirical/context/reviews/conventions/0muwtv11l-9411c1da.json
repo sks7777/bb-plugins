@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "page": ".empirical/context/conventions.md",
+  "head": "ff4dec1308f8ae69d040eebdf77863182c7a45ca",
+  "units": [
+    "AGENTS.md"
+  ],
+  "pending": {
+    "AGENTS.md": "git:2eb6d18d66ec799b8b45a102857213346a03190c"
+  }
+}

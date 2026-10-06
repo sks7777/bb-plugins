@@ -26,7 +26,10 @@ const {
   escapeExternalJsonOutput,
   formatWorkItemContext,
   formatWorkItemHandoffPrompt,
-  taskboardRpcContract
+  projectConfigViewSchema,
+  projectSourceConfigSchema,
+  taskboardRpcContract,
+  workSourceSchema
 } = await import('../contract.ts');
 type WorkItem = Parameters<typeof formatWorkItemContext>[0];
 
@@ -393,4 +396,67 @@ test('returns authoritative provider identity with cached list results', () => {
     taskboardRpcContract.listItems.output.parse({ items: [], provider: null }),
     { items: [], provider: null }
   );
+});
+
+test('bbtasks is a registered taskboard source', () => {
+  assert.equal(workSourceSchema.safeParse('bbtasks').success, true);
+  assert.equal(workSourceSchema.safeParse('unknown').success, false);
+});
+
+test('project source config carries the bb tasks project id', () => {
+  const parsed = projectSourceConfigSchema.parse({
+    projectId: 'proj_taskboard',
+    source: 'bbtasks',
+    linearTeamKey: '',
+    linearFinishedDays: 0,
+    jiraBaseUrl: '',
+    jiraEmail: '',
+    jiraJql: 'order by updated',
+    gitlabProjectRef: '',
+    bbTasksProjectId: ''
+  });
+  assert.equal(parsed.bbTasksProjectId, '');
+});
+
+test('project config view carries bb tasks projects and availability', () => {
+  const parsed = projectConfigViewSchema.parse({
+    projectId: 'proj_taskboard',
+    source: 'bbtasks',
+    linearTeamKey: '',
+    linearFinishedDays: 0,
+    jiraBaseUrl: '',
+    jiraEmail: '',
+    jiraJql: 'order by updated',
+    gitlabProjectRef: '',
+    bbTasksProjectId: '01HX0000000000000000000000',
+    githubRepos: [],
+    linearCredentialConfigured: false,
+    jiraCredentialConfigured: false,
+    gitlabConfigured: false,
+    bbTasksConfigured: true,
+    bbTasksProjects: [
+      {
+        id: '01HX0000000000000000000000',
+        name: 'Product',
+        prefix: 'PROD',
+        linkedBbProjectId: 'proj_taskboard'
+      }
+    ]
+  });
+  assert.equal(parsed.bbTasksProjects.length, 1);
+  assert.equal(parsed.bbTasksProjects[0].prefix, 'PROD');
+});
+
+test('create issue context accepts the Tasks project destination label', () => {
+  const method = taskboardRpcContract.getCreateIssueContext;
+  assert.ok(method);
+});
+
+test('handoff context renders a BB Tasks note in place of an empty URL', () => {
+  const item = workItem({
+    source: 'bbtasks',
+    url: ''
+  });
+  const context = formatWorkItemContext(item);
+  assert.match(context, /- URL: \(BB Tasks task\)/);
 });

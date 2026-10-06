@@ -159,7 +159,8 @@ const SOURCE_FILTER_OPTIONS = [
   'linear',
   'github',
   'jira',
-  'gitlab'
+  'gitlab',
+  'bbtasks'
 ] as const;
 const RIGHT_PANEL_PINNED_STORAGE_KEY = 'bb-taskboard:right-panel-pinned';
 const RIGHT_PANEL_PIN_EVENT = 'bb-taskboard:right-panel-pin-changed';
@@ -384,7 +385,8 @@ function isWorkSource(value: string): value is WorkSource {
     value === 'linear' ||
     value === 'github' ||
     value === 'jira' ||
-    value === 'gitlab'
+    value === 'gitlab' ||
+    value === 'bbtasks'
   );
 }
 
@@ -392,6 +394,7 @@ function sourceName(source: WorkSource): string {
   if (source === 'github') return 'GitHub';
   if (source === 'jira') return 'Jira';
   if (source === 'gitlab') return 'GitLab';
+  if (source === 'bbtasks') return 'BB Tasks';
   return 'Linear';
 }
 
@@ -402,7 +405,8 @@ const TRACKER_OPTIONS: ReadonlyArray<{
   { source: 'github', description: 'Repository issues' },
   { source: 'linear', description: 'Team issues' },
   { source: 'jira', description: 'JQL-filtered issues' },
-  { source: 'gitlab', description: 'GitLab project issues' }
+  { source: 'gitlab', description: 'GitLab project issues' },
+  { source: 'bbtasks', description: 'Linked Tasks projects' }
 ];
 
 function SourceGlyph({ source }: { source: WorkSource }) {
@@ -438,6 +442,31 @@ function SourceGlyph({ source }: { source: WorkSource }) {
           stroke="currentColor"
           strokeLinecap="round"
           strokeWidth="1.35"
+        />
+      </svg>
+    );
+  }
+
+  if (source === 'bbtasks') {
+    return (
+      <svg aria-hidden="true" className="size-3.5" viewBox="0 0 16 16">
+        <rect
+          x="1.6"
+          y="1.6"
+          width="12.8"
+          height="12.8"
+          rx="3.2"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.35"
+        />
+        <path
+          d="m4.8 8.2 2.1 2.1 4.3-4.6"
+          fill="none"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="1.5"
         />
       </svg>
     );
@@ -4977,12 +5006,14 @@ function TrackerDetail({
               {item.title}
             </h1>
             <div className="flex shrink-0 flex-wrap gap-2">
-              <Button variant="outline" size="sm" asChild>
-                <a href={item.url} target="_blank" rel="noreferrer">
-                  <Icon name="ExternalLink" className="size-3.5" />
-                  Open
-                </a>
-              </Button>
+              {item.url ? (
+                <Button variant="outline" size="sm" asChild>
+                  <a href={item.url} target="_blank" rel="noreferrer">
+                    <Icon name="ExternalLink" className="size-3.5" />
+                    Open
+                  </a>
+                </Button>
+              ) : null}
               {onAddToComposer ? (
                 <Button
                   type="button"
@@ -5076,7 +5107,8 @@ function configFingerprint(config: ProjectConfigView): string {
     jiraBaseUrl: config.jiraBaseUrl,
     jiraEmail: config.jiraEmail,
     jiraJql: config.jiraJql,
-    gitlabProjectRef: config.gitlabProjectRef
+    gitlabProjectRef: config.gitlabProjectRef,
+    bbTasksProjectId: config.bbTasksProjectId
   });
 }
 
@@ -5270,6 +5302,7 @@ function ProjectConfigForm({
         jiraEmail: config.jiraEmail.trim(),
         jiraJql: config.jiraJql.trim(),
         gitlabProjectRef: config.gitlabProjectRef.trim(),
+        bbTasksProjectId: config.bbTasksProjectId.trim(),
         linearCredential,
         jiraCredential
       });
@@ -5684,6 +5717,70 @@ function ProjectConfigForm({
               />
             </label>
           </div>
+        </section>
+      ) : null}
+
+      {config.source === 'bbtasks' ? (
+        <section
+          className={cardClass}
+          aria-labelledby="bbtasks-connector-title"
+        >
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <h3
+                id="bbtasks-connector-title"
+                className="text-sm font-semibold"
+              >
+                <span className="mr-2 inline-flex items-center">
+                  <SourceGlyph source="bbtasks" />
+                </span>
+                BB Tasks
+              </h3>
+              <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                Uses the BB Tasks plugin on this server — no credentials. The
+                tasks of one Tasks project appear on this board.
+              </p>
+            </div>
+          </div>
+          <div className="mt-4 grid gap-3 @lg:grid-cols-2">
+            <label className="space-y-1.5 text-xs font-medium @lg:col-span-2">
+              Tasks project
+              <select
+                aria-label="Tasks project"
+                className="tb-field"
+                disabled={saving}
+                value={config.bbTasksProjectId}
+                onChange={event => {
+                  setConfig({
+                    ...config,
+                    bbTasksProjectId: event.target.value
+                  });
+                  setSaved(false);
+                }}
+              >
+                <option value="">Linked project (automatic)</option>
+                {config.bbTasksProjects.map(project => (
+                  <option key={project.id} value={project.id}>
+                    {project.prefix} — {project.name}
+                    {project.linkedBbProjectId === config.projectId
+                      ? ' · linked'
+                      : ''}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+          {!config.bbTasksConfigured ? (
+            <p className="mt-2 text-xs text-muted-foreground">
+              Install and enable the BB Tasks plugin (bb plugin install tasks)
+              to list its projects here.
+            </p>
+          ) : config.bbTasksProjects.length === 0 ? (
+            <p className="mt-2 text-xs text-muted-foreground">
+              No Tasks projects exist yet. Create one with bb tasks project
+              create --link-bb-project {config.projectId}.
+            </p>
+          ) : null}
         </section>
       ) : null}
 

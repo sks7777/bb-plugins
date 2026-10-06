@@ -68,7 +68,13 @@ export type {
   SecretMutation
 } from './credential-contract.js';
 
-export const workSourceSchema = z.enum(['linear', 'github', 'jira', 'gitlab']);
+export const workSourceSchema = z.enum([
+  'linear',
+  'github',
+  'jira',
+  'gitlab',
+  'bbtasks'
+]);
 export type WorkSource = z.infer<typeof workSourceSchema>;
 
 export const trackerProjectSchema = z
@@ -118,17 +124,30 @@ export const projectSourceConfigSchema = z
     jiraBaseUrl: jiraBaseUrlSchema,
     jiraEmail: z.string().trim(),
     jiraJql: z.string().trim().min(1),
-    gitlabProjectRef: gitlabProjectRefSchema
+    gitlabProjectRef: gitlabProjectRefSchema,
+    bbTasksProjectId: z.string().trim().default('')
   })
   .strict();
 export type ProjectSourceConfig = z.infer<typeof projectSourceConfigSchema>;
+
+export const bbTasksProjectSummarySchema = z
+  .object({
+    id: z.string().min(1),
+    name: z.string(),
+    prefix: z.string().min(1),
+    linkedBbProjectId: bbProjectIdSchema.nullable()
+  })
+  .strict();
+export type BbTasksProjectSummary = z.infer<typeof bbTasksProjectSummarySchema>;
 
 export const projectConfigViewSchema = projectSourceConfigSchema
   .extend({
     githubRepos: z.array(z.string()),
     linearCredentialConfigured: z.boolean(),
     jiraCredentialConfigured: z.boolean(),
-    gitlabConfigured: z.boolean()
+    gitlabConfigured: z.boolean(),
+    bbTasksProjects: z.array(bbTasksProjectSummarySchema),
+    bbTasksConfigured: z.boolean()
   })
   .strict();
 export type ProjectConfigView = z.infer<typeof projectConfigViewSchema>;
@@ -293,7 +312,13 @@ export const createIssueContextSchema = z
     source: workSourceSchema,
     available: z.boolean(),
     message: z.string().nullable(),
-    destinationLabel: z.enum(['Repository', 'Team', 'Project key', 'GitLab project']),
+    destinationLabel: z.enum([
+      'Repository',
+      'Team',
+      'Project key',
+      'GitLab project',
+      'Tasks project'
+    ]),
     destinations: z.array(createIssueDestinationSchema),
     defaultDestinationId: z.string().nullable(),
     allowsCustomDestination: z.boolean(),
@@ -524,7 +549,7 @@ export function formatWorkItemContext(item: WorkItemDetail | WorkItem): string {
     `- BB project: ${item.bbProjectId}`,
     `- Tracker project: ${item.project ?? 'None'}`,
     `- Labels: ${item.labels.join(', ') || 'None'}`,
-    `- URL: ${item.url}`,
+    `- URL: ${item.url || '(BB Tasks task)'}`,
     '',
     '## Description',
     '',
@@ -595,5 +620,7 @@ function delimiterValue(value: string): string {
 export function sourceName(source: WorkSource): string {
   if (source === 'github') return 'GitHub';
   if (source === 'jira') return 'Jira';
+  if (source === 'gitlab') return 'GitLab';
+  if (source === 'bbtasks') return 'BB Tasks';
   return 'Linear';
 }

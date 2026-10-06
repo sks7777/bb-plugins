@@ -61,6 +61,7 @@ interface ProjectConfigRow {
   jira_email: string;
   jira_jql: string;
   gitlab_project_ref: string;
+  bb_tasks_project_id: string;
 }
 
 interface ProjectBoardSettingsRow {
@@ -129,7 +130,8 @@ function configFromRow(row: ProjectConfigRow): ProjectSourceConfig {
     jiraBaseUrl: row.jira_base_url,
     jiraEmail: row.jira_email,
     jiraJql: row.jira_jql,
-    gitlabProjectRef: row.gitlab_project_ref
+    gitlabProjectRef: row.gitlab_project_ref,
+    bbTasksProjectId: row.bb_tasks_project_id
   });
 }
 
@@ -506,6 +508,91 @@ export function createWorkItemStore(bb: BbPluginApi) {
     `
       ALTER TABLE project_source_config
         ADD COLUMN linear_finished_days INTEGER NOT NULL DEFAULT 0;
+    `,
+    `
+      CREATE TABLE work_items_by_project_next (
+        bb_project_id TEXT NOT NULL,
+        source TEXT NOT NULL CHECK (source IN ('linear', 'github', 'jira', 'gitlab', 'bbtasks')),
+        locator TEXT NOT NULL,
+        item_key TEXT NOT NULL,
+        title TEXT NOT NULL,
+        description TEXT NOT NULL,
+        url TEXT NOT NULL,
+        status TEXT NOT NULL,
+        state_category TEXT NOT NULL CHECK (
+          state_category IN ('backlog', 'todo', 'in_progress', 'done', 'canceled')
+        ),
+        priority TEXT,
+        assignee TEXT,
+        project TEXT,
+        labels_json TEXT NOT NULL,
+        updated_at TEXT NOT NULL,
+        PRIMARY KEY (bb_project_id, source, locator)
+      );
+      INSERT INTO work_items_by_project_next (
+        bb_project_id, source, locator, item_key, title, description, url,
+        status, state_category, priority, assignee, project, labels_json,
+        updated_at
+      )
+      SELECT bb_project_id, source, locator, item_key, title, description, url,
+        status, state_category, priority, assignee, project, labels_json,
+        updated_at
+      FROM work_items_by_project;
+      DROP TABLE work_items_by_project;
+      ALTER TABLE work_items_by_project_next RENAME TO work_items_by_project;
+      CREATE INDEX idx_project_work_items_updated
+        ON work_items_by_project(bb_project_id, updated_at DESC, source, locator);
+      CREATE INDEX idx_project_work_items_source_state_updated
+        ON work_items_by_project(
+          bb_project_id, source, state_category, updated_at DESC, locator
+        );
+      CREATE INDEX idx_project_work_items_key
+        ON work_items_by_project(bb_project_id, item_key COLLATE NOCASE);
+      CREATE INDEX idx_all_project_work_items_updated
+        ON work_items_by_project(updated_at DESC, bb_project_id, source, locator);
+
+      CREATE TABLE source_sync_by_project_next (
+        bb_project_id TEXT NOT NULL,
+        source TEXT NOT NULL CHECK (source IN ('linear', 'github', 'jira', 'gitlab', 'bbtasks')),
+        last_synced_at TEXT,
+        error TEXT,
+        item_count INTEGER NOT NULL DEFAULT 0 CHECK (item_count >= 0),
+        PRIMARY KEY (bb_project_id, source)
+      );
+      INSERT INTO source_sync_by_project_next (
+        bb_project_id, source, last_synced_at, error, item_count
+      )
+      SELECT bb_project_id, source, last_synced_at, error, item_count
+      FROM source_sync_by_project;
+      DROP TABLE source_sync_by_project;
+      ALTER TABLE source_sync_by_project_next RENAME TO source_sync_by_project;
+
+      CREATE TABLE project_source_config_next (
+        bb_project_id TEXT PRIMARY KEY,
+        source TEXT NOT NULL CHECK (source IN ('linear', 'github', 'jira', 'gitlab', 'bbtasks')),
+        linear_team_key TEXT NOT NULL,
+        linear_finished_days INTEGER NOT NULL DEFAULT 0,
+        jira_base_url TEXT NOT NULL,
+        jira_email TEXT NOT NULL,
+        jira_jql TEXT NOT NULL,
+        gitlab_project_ref TEXT NOT NULL,
+        bb_tasks_project_id TEXT NOT NULL DEFAULT '',
+        updated_at TEXT NOT NULL
+      );
+      INSERT INTO project_source_config_next (
+        bb_project_id, source, linear_team_key, linear_finished_days,
+        jira_base_url, jira_email, jira_jql, gitlab_project_ref,
+        bb_tasks_project_id, updated_at
+      )
+      SELECT
+        bb_project_id, source, linear_team_key, linear_finished_days,
+        jira_base_url, jira_email, jira_jql, gitlab_project_ref,
+        '', updated_at
+      FROM project_source_config;
+      DROP TABLE project_source_config;
+      ALTER TABLE project_source_config_next RENAME TO project_source_config;
+      CREATE INDEX idx_project_source_selected
+        ON project_source_config(source, bb_project_id);
     `
   ]);
 
@@ -600,7 +687,8 @@ export function createWorkItemStore(bb: BbPluginApi) {
       jira_base_url,
       jira_email,
       jira_jql,
-      gitlab_project_ref
+      gitlab_project_ref,
+      bb_tasks_project_id
     FROM project_source_config
     WHERE bb_project_id = ?
   `);
@@ -860,14 +948,16 @@ export function createWorkItemStore(bb: BbPluginApi) {
             string,
             string,
             string,
+            string,
             string
           ]
         >(
           `
           INSERT INTO project_source_config (
             bb_project_id, source, linear_team_key, linear_finished_days,
-            jira_base_url, jira_email, jira_jql, gitlab_project_ref, updated_at
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            jira_base_url, jira_email, jira_jql, gitlab_project_ref,
+            bb_tasks_project_id, updated_at
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
           ON CONFLICT(bb_project_id) DO UPDATE SET
             source = excluded.source,
             linear_team_key = excluded.linear_team_key,
@@ -876,6 +966,7 @@ export function createWorkItemStore(bb: BbPluginApi) {
             jira_email = excluded.jira_email,
             jira_jql = excluded.jira_jql,
             gitlab_project_ref = excluded.gitlab_project_ref,
+            bb_tasks_project_id = excluded.bb_tasks_project_id,
             updated_at = excluded.updated_at
         `
         ).run(
@@ -887,6 +978,7 @@ export function createWorkItemStore(bb: BbPluginApi) {
           config.jiraEmail,
           config.jiraJql,
           config.gitlabProjectRef,
+          config.bbTasksProjectId,
           new Date().toISOString()
         );
         if (previous && previous.source !== config.source) {
