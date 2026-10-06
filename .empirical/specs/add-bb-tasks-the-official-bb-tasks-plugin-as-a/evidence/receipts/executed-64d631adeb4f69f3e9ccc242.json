@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "id": "executed-64d631adeb4f69f3e9ccc242",
+  "criteria": [
+    "AC-1",
+    "AC-2",
+    "AC-3",
+    "AC-4",
+    "AC-5",
+    "AC-6",
+    "AC-7",
+    "AC-8",
+    "AC-9",
+    "AC-UI-1",
+    "AC-UI-2",
+    "AC-UI-3"
+  ],
+  "evidenceKinds": [
+    "test"
+  ],
+  "summary": "retry save-model-focused",
+  "passed": false,
+  "startedAt": "2026-10-06T17:01:35.420Z",
+  "completedAt": "2026-10-06T17:01:35.677Z",
+  "provenance": {
+    "repositoryId": "sha256:703b13956fbeb2dfe9d4cf7c34077de56a5c348c0f42f9ceef5c1cac794fbf42",
+    "feature": "add-bb-tasks-the-official-bb-tasks-plugin-as-a",
+    "specRevision": 2,
+    "specDigest": "sha256:c0a35f1991cd987d03426579604c71d8c3387cc972875685d821717fa1c72801",
+    "treeDigest": "sha256:2b4d0f3186103aba91264139f0f9d11ba891aaa71f6b62d6b83c46b984238a34",
+    "policyDigest": "sha256:4aedcfe7f723bdfc2b5d92de7eacf6bac553de4731715c9d0f84dc58dd5754bd"
+  },
+  "digest": "sha256:9af2f18c87994185ba02c009578c04767c3713ec4e8dd3ca0be10d3c251de4f2",
+  "kind": "executed",
+  "command": {
+    "argv": [
+      "npm",
+      "test",
+      "--workspace",
+      "bb-plugin-save-my-model"
+    ],
+    "cwd": ".",
+    "timeoutMs": 60000,
+    "maxOutputBytes": 262144,
+    "environmentKeys": [
+      "PATH"
+    ]
+  },
+  "result": {
+    "exitCode": 1,
+    "signal": null,
+    "timedOut": false,
+    "stdoutDigest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderrDigest": "sha256:a84927e88a3a950727b972d2bee0373f146b54f1b6c47165ea9280e220e0fc6d",
+    "stdoutTail": "",
+    "stderrTail": "npm error No workspaces found:\nnpm error   --workspace=bb-plugin-save-my-model\nnpm error A complete log of this run can be found in: /Users/k.sidenko/.npm/_logs/2026-10-06T17_01_35_588Z-debug-0.log\n",
+    "stdoutTruncated": false,
+    "stderrTruncated": false
+  }
+}

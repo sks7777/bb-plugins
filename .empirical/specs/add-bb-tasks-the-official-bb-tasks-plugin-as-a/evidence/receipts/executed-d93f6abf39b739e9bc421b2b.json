@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "id": "executed-d93f6abf39b739e9bc421b2b",
+  "criteria": [
+    "AC-1",
+    "AC-2",
+    "AC-3",
+    "AC-4",
+    "AC-5",
+    "AC-6"
+  ],
+  "evidenceKinds": [
+    "test"
+  ],
+  "summary": "Policy verification command aura-focused",
+  "passed": true,
+  "startedAt": "2026-10-06T17:00:29.510Z",
+  "completedAt": "2026-10-06T17:00:33.079Z",
+  "provenance": {
+    "repositoryId": "sha256:703b13956fbeb2dfe9d4cf7c34077de56a5c348c0f42f9ceef5c1cac794fbf42",
+    "feature": "add-bb-tasks-the-official-bb-tasks-plugin-as-a",
+    "specRevision": 2,
+    "specDigest": "sha256:c0a35f1991cd987d03426579604c71d8c3387cc972875685d821717fa1c72801",
+    "treeDigest": "sha256:2b4d0f3186103aba91264139f0f9d11ba891aaa71f6b62d6b83c46b984238a34",
+    "policyDigest": "sha256:4aedcfe7f723bdfc2b5d92de7eacf6bac553de4731715c9d0f84dc58dd5754bd"
+  },
+  "digest": "sha256:ff91698e14dfc86bdc0ba93c212e7a26e9dedb623b0f7aeb3cc7a1929dfdb760",
+  "kind": "executed",
+  "command": {
+    "argv": [
+      "npm",
+      "run",
+      "check",
+      "--workspace",
+      "bb-plugin-aura"
+    ],
+    "cwd": ".",
+    "timeoutMs": 120000,
+    "maxOutputBytes": 1048576,
+    "environmentKeys": [
+      "PATH"
+    ]
+  },
+  "result": {
+    "exitCode": 0,
+    "signal": null,
+    "timedOut": false,
+    "stdoutDigest": "sha256:c1372baa04f3fd6da50ae74ef56555732802f3db25aee5b6bfa93f18b06a970a",
+    "stderrDigest": "sha256:957d2e1bcf2d6f7ad1fb251002828b6166ed1ba4d8a1cba6b9b53a962170108d",
+    "stdoutTail": "\n> bb-plugin-aura@0.2.2 check\n> npm run typecheck && npm test && npm run build\n\n\n> bb-plugin-aura@0.2.2 typecheck\n> tsc --noEmit\n\n\n> bb-plugin-aura@0.2.2 test\n> node --experimental-strip-types --test test/*.test.ts\n\n✔ applies scoped backgrounds, disables cleanly and ignores a late fetch after disposal (130.216375ms)\n✔ six independent slots retain images and appearance across switches and reload (40.357208ms)\n✔ invalid image or slot rejects the entire apply without partially changing settings (15.873625ms)\n✔ scope stays global across slots; clearing/resetting preserves saved work (17.283958ms)\n✔ image type must match bytes; legacy settings get the new scope default (3.754958ms)\n✔ versioned images use an immutable private browser cache (17.711417ms)\n✔ New thread dimmer toggles without replacing images or saved slots (18.838792ms)\nℹ tests 7\nℹ suites 0\nℹ pass 7\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 886.366125\n\n> bb-plugin-aura@0.2.2 build\n> env -u BB_CLI bb plugin build .\n\ndist/server.js\ndist/server.js.map\ndist/server.meta.json\ndist/app.js\ndist/app.css\ndist/app.meta.json\n",
+    "stderrTail": "(node:17779) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.\n(Use `node --trace-deprecation ...` to show where the warning was created)\n",
+    "stdoutTruncated": false,
+    "stderrTruncated": false
+  }
+}

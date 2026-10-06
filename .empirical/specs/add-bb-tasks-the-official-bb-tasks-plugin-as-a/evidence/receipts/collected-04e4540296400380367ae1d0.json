@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "id": "collected-04e4540296400380367ae1d0",
+  "criteria": [
+    "AC-1",
+    "AC-2",
+    "AC-3",
+    "AC-4",
+    "AC-5",
+    "AC-6",
+    "AC-7",
+    "AC-8",
+    "AC-9",
+    "AC-UI-1",
+    "AC-UI-2",
+    "AC-UI-3"
+  ],
+  "evidenceKinds": [
+    "browser",
+    "screenshot"
+  ],
+  "summary": "Live BB UI verification against the installed 0.4.0 worktree plugin: Taskboard board lists linked TBQA project tasks (BB Tasks source), task detail hides the external Open button for empty URL, create dialog offers the 'Tasks project' destination without assignee/milestone/issue-type fields, and Manage shows the BB Tasks tracker card with the tasks-project picker (linked project marked). Five screenshots captured by qa/browser.mjs against http://127.0.0.1:38886.",
+  "passed": true,
+  "startedAt": "2026-10-06T17:50:51.467Z",
+  "completedAt": "2026-10-06T17:50:51.467Z",
+  "provenance": {
+    "repositoryId": "sha256:703b13956fbeb2dfe9d4cf7c34077de56a5c348c0f42f9ceef5c1cac794fbf42",
+    "feature": "add-bb-tasks-the-official-bb-tasks-plugin-as-a",
+    "specRevision": 2,
+    "specDigest": "sha256:c0a35f1991cd987d03426579604c71d8c3387cc972875685d821717fa1c72801",
+    "treeDigest": "sha256:22e767f49a545d3d94cdea516c2e734dad95b08a5af79de2c54a083b28ebc4eb",
+    "policyDigest": "sha256:4aedcfe7f723bdfc2b5d92de7eacf6bac553de4731715c9d0f84dc58dd5754bd"
+  },
+  "digest": "sha256:80e2cec537c622dc66e32971b6f09e3d25fcabe645193a10688d512a0eaf8a4f",
+  "kind": "collected",
+  "collector": "qa/browser.mjs (headless chromium against the running BB server)",
+  "artifacts": [
+    {
+      "path": ".empirical/specs/add-bb-tasks-the-official-bb-tasks-plugin-as-a/qa/board-bbtasks.png",
+      "mediaType": "image/png",
+      "bytes": 127455,
+      "digest": "sha256:7db30811d3736ff54c765719cf1755b31251a6bfa4c665d9327f940b4c7e35c0"
+    },
+    {
+      "path": ".empirical/specs/add-bb-tasks-the-official-bb-tasks-plugin-as-a/qa/browser.mjs",
+      "mediaType": "text/javascript",
+      "bytes": 5603,
+      "digest": "sha256:9f6f722dc503fd26b4ae6c141d92fe3359b9488416762a8da87a22e9eb3a36c6"
+    },
+    {
+      "path": ".empirical/specs/add-bb-tasks-the-official-bb-tasks-plugin-as-a/qa/create-bbtasks.png",
+      "mediaType": "image/png",
+      "bytes": 154972,
+      "digest": "sha256:f5fa8f42c7c883371fe74b0a83f1e67e421760f11373bf028dca9e470df9abf2"
+    },
+    {
+      "path": ".empirical/specs/add-bb-tasks-the-official-bb-tasks-plugin-as-a/qa/detail-bbtasks.png",
+      "mediaType": "image/png",
+      "bytes": 134708,
+      "digest": "sha256:536ed73e48cb23fd32de51945e3ddf9a051075a70fecb06a9c23627e0fb8859c"
+    },
+    {
+      "path": ".empirical/specs/add-bb-tasks-the-official-bb-tasks-plugin-as-a/qa/manage-bbtasks.png",
+      "mediaType": "image/png",
+      "bytes": 171910,
+      "digest": "sha256:8b216c091bb4af998ada86ad247669af34e8a38109d050380f6e0a8c8c10993c"
+    },
+    {
+      "path": ".empirical/specs/add-bb-tasks-the-official-bb-tasks-plugin-as-a/qa/manage-trackers.png",
+      "mediaType": "image/png",
+      "bytes": 171036,
+      "digest": "sha256:37cafa0ad6b5765472ea3d7a3390986167fd2c7a6f02b220fc6f13d9450941e9"
+    }
+  ]
+}
