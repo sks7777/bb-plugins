@@ -549,7 +549,7 @@ export function formatWorkItemContext(item: WorkItemDetail | WorkItem): string {
     `- BB project: ${item.bbProjectId}`,
     `- Tracker project: ${item.project ?? 'None'}`,
     `- Labels: ${item.labels.join(', ') || 'None'}`,
-    `- URL: ${item.url || '(BB Tasks task)'}`,
+    `- URL: ${item.url || '(no external URL)'}`,
     '',
     '## Description',
     '',

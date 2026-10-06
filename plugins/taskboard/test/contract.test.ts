@@ -458,5 +458,5 @@ test('handoff context renders a BB Tasks note in place of an empty URL', () => {
     url: ''
   });
   const context = formatWorkItemContext(item);
-  assert.match(context, /- URL: \(BB Tasks task\)/);
+  assert.match(context, /- URL: \(no external URL\)/);
 });

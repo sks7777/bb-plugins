@@ -913,6 +913,9 @@ export default async function plugin(bb: BbPluginApi) {
         );
         bbTasksDestinationIds = resolved.destinationIds;
         bbTasksDestinationLabels = resolved.destinationLabels;
+        if (resolved.problem !== null) {
+          bbTasksMessage = resolved.problem;
+        }
       } catch (error) {
         bbTasksMessage = errorMessage(error);
       }
@@ -2125,7 +2128,7 @@ export default async function plugin(bb: BbPluginApi) {
             ? workSourceSchema.safeParse(sourceValue)
             : null;
           if (parsedSource && !parsedSource.success) {
-            throw new Error('Source must be linear, github, jira, or gitlab');
+            throw new Error('Source must be linear, github, jira, gitlab, or bbtasks');
           }
           const source = parsedSource?.data;
           const sources = await syncAll(project.id, source, true);
@@ -2170,7 +2173,7 @@ export default async function plugin(bb: BbPluginApi) {
             ? workSourceSchema.safeParse(sourceValue)
             : null;
           if (parsedSource && !parsedSource.success) {
-            throw new Error('Source must be linear, github, jira, or gitlab');
+            throw new Error('Source must be linear, github, jira, gitlab, or bbtasks');
           }
           const project = await requireProject();
           // Explicit --source/--query flags beat a --preset's saved values;
@@ -2239,7 +2242,7 @@ export default async function plugin(bb: BbPluginApi) {
           const parsedSource = workSourceSchema.safeParse(args.positionals[0]);
           const locator = args.positionals[1]!;
           if (!parsedSource.success) {
-            throw new Error('Source must be linear, github, jira, or gitlab');
+            throw new Error('Source must be linear, github, jira, gitlab, or bbtasks');
           }
           const item = await getLiveItem(
             project.id,
@@ -2262,7 +2265,7 @@ export default async function plugin(bb: BbPluginApi) {
           const project = await requireProject();
           const parsedSource = workSourceSchema.safeParse(args.positionals[0]);
           if (!parsedSource.success) {
-            throw new Error('Source must be linear, github, jira, or gitlab');
+            throw new Error('Source must be linear, github, jira, gitlab, or bbtasks');
           }
           const locator = args.positionals[1]!;
           const options = await liveStatusOptions(
@@ -2302,7 +2305,7 @@ export default async function plugin(bb: BbPluginApi) {
           const project = await requireProject();
           const parsedSource = workSourceSchema.safeParse(args.positionals[0]);
           if (!parsedSource.success) {
-            throw new Error('Source must be linear, github, jira, or gitlab');
+            throw new Error('Source must be linear, github, jira, gitlab, or bbtasks');
           }
           const item = await updateItemStatus(
             project.id,
