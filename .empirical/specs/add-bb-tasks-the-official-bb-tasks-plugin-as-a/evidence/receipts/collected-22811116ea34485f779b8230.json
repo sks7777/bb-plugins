@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "id": "collected-22811116ea34485f779b8230",
+  "criteria": [
+    "AC-1",
+    "AC-2",
+    "AC-3",
+    "AC-4",
+    "AC-5",
+    "AC-6",
+    "AC-7",
+    "AC-8",
+    "AC-9",
+    "AC-UI-1",
+    "AC-UI-2",
+    "AC-UI-3"
+  ],
+  "evidenceKinds": [
+    "review"
+  ],
+  "summary": "Isolated fresh-context review of ff4dec13..58f8dd6e: 12/12 criteria pass, no security findings, one accepted low finding (F-3). Structured verdict in review-result.json recorded through empirical_review.",
+  "passed": true,
+  "startedAt": "2026-10-06T16:56:04.288Z",
+  "completedAt": "2026-10-06T16:56:04.288Z",
+  "provenance": {
+    "repositoryId": "sha256:703b13956fbeb2dfe9d4cf7c34077de56a5c348c0f42f9ceef5c1cac794fbf42",
+    "feature": "add-bb-tasks-the-official-bb-tasks-plugin-as-a",
+    "specRevision": 2,
+    "specDigest": "sha256:c0a35f1991cd987d03426579604c71d8c3387cc972875685d821717fa1c72801",
+    "treeDigest": "sha256:2b4d0f3186103aba91264139f0f9d11ba891aaa71f6b62d6b83c46b984238a34",
+    "policyDigest": "sha256:4aedcfe7f723bdfc2b5d92de7eacf6bac553de4731715c9d0f84dc58dd5754bd"
+  },
+  "digest": "sha256:911fab5db7fbc7edb918cc6e7425472b4262303edb4852176a782089542d2459",
+  "kind": "collected",
+  "collector": "empirical-reviewer-bbtasks (isolated subagent sub-6aa5afed)",
+  "artifacts": [
+    {
+      "path": ".empirical/specs/add-bb-tasks-the-official-bb-tasks-plugin-as-a/review-result.json",
+      "mediaType": "application/json",
+      "bytes": 385,
+      "digest": "sha256:fd89399ed67a92bf3e25537d27fa447c541a15b0244e750a97e2ea949fb70774"
+    }
+  ]
+}

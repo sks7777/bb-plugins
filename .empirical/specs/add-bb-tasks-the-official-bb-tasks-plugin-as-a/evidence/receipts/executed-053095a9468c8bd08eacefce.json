@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "id": "executed-053095a9468c8bd08eacefce",
+  "criteria": [
+    "AC-1",
+    "AC-2",
+    "AC-3",
+    "AC-4",
+    "AC-5",
+    "AC-6",
+    "AC-7",
+    "AC-8",
+    "AC-9",
+    "AC-UI-1",
+    "AC-UI-2",
+    "AC-UI-3"
+  ],
+  "evidenceKinds": [
+    "test"
+  ],
+  "summary": "Policy verification command action-topbar-focused",
+  "passed": true,
+  "startedAt": "2026-10-06T17:00:40.804Z",
+  "completedAt": "2026-10-06T17:00:41.250Z",
+  "provenance": {
+    "repositoryId": "sha256:703b13956fbeb2dfe9d4cf7c34077de56a5c348c0f42f9ceef5c1cac794fbf42",
+    "feature": "add-bb-tasks-the-official-bb-tasks-plugin-as-a",
+    "specRevision": 2,
+    "specDigest": "sha256:c0a35f1991cd987d03426579604c71d8c3387cc972875685d821717fa1c72801",
+    "treeDigest": "sha256:2b4d0f3186103aba91264139f0f9d11ba891aaa71f6b62d6b83c46b984238a34",
+    "policyDigest": "sha256:4aedcfe7f723bdfc2b5d92de7eacf6bac553de4731715c9d0f84dc58dd5754bd"
+  },
+  "digest": "sha256:3be4d514d84e8b2e670746cb4ec5cacb968b3647caea241f9b338081655c2794",
+  "kind": "executed",
+  "command": {
+    "argv": [
+      "npm",
+      "run",
+      "test",
+      "--workspace=bb-plugin-action-topbar"
+    ],
+    "cwd": ".",
+    "timeoutMs": 60000,
+    "maxOutputBytes": 262144,
+    "environmentKeys": [
+      "PATH"
+    ]
+  },
+  "result": {
+    "exitCode": 0,
+    "signal": null,
+    "timedOut": false,
+    "stdoutDigest": "sha256:e624fdb17292dfe5ff8fb0b1ba10609e72f75ba04631bf8c6b2d2fcd522b48f8",
+    "stderrDigest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdoutTail": "\n> bb-plugin-action-topbar@0.1.2 test\n> node --test --experimental-strip-types test/*.test.ts\n\n✔ starts with the action set shown in the BB right-panel launcher (0.905209ms)\n✔ normalizes, bounds, and deduplicates a discovered action catalog (0.187792ms)\n✔ round-trips valid storage and rejects unknown storage versions (0.14675ms)\n✔ a visible launcher replaces the seed while an absent launcher preserves it (0.08975ms)\n✔ classifies known and third-party action labels for compact glyphs (0.150667ms)\n✔ mounts the owned strip in the thread-header center and leaves native plus alone (0.719375ms)\n✔ keeps Action lookup scoped to BB's native launcher (0.090667ms)\n✔ keeps lifecycle and drag work event-driven and reversible (0.708541ms)\n✔ retains and releases the initiating pointer for topbar tab drags (0.423375ms)\n✔ keeps every Action Topbar surface above host application chrome (0.907666ms)\n✔ preserves keyboard focus and the bounded cross-pane relaunch path (0.149417ms)\n✔ focuses main Action panes without opening the right panel (0.120125ms)\n✔ places close controls on the left and closes through persisted tab state (0.50025ms)\n✔ makes Actions drag-only instead of opening them from click or Enter (0.166791ms)\n✔ projects BB tab state into the compact frontend RPC model (4.555833ms)\n✔ persists a topbar drag reorder through BB's tab revision API (1.170791ms)\n✔ closes a topbar tab through BB's tab revision API (1.268833ms)\n✔ closes a main-pane terminal without a persisted panel tab (0.911792ms)\n✔ does not close a main-pane terminal owned by another thread (0.838042ms)\n✔ bounds host-provided tab labels before returning the RPC projection (0.771708ms)\n✔ shows only real content tabs in the mirrored strip (0.849208ms)\n✔ keeps the empty combobox action-only and ranks open tabs while searching (0.354167ms)\n✔ ranks an equivalent open tab before its Action even when titles differ (0.088958ms)\n✔ never positionally pairs a stale New Tab snapshot with a new Action tab (0.094084ms)\n✔ uses one bounded normalization for server and native tab identities (0.085708ms)\n✔ validates RPC snapshots before the content script renders them (0.176958ms)\nℹ tests 26\nℹ suites 0\nℹ pass 26\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 199.539583\n",
+    "stderrTail": "",
+    "stdoutTruncated": false,
+    "stderrTruncated": false
+  }
+}

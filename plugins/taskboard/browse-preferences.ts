@@ -18,7 +18,13 @@ const MAX_FILTER_VALUES = 100;
 const MAX_COLLAPSE_OVERRIDES = 100;
 
 const trackerViewPreferenceSchema = z.enum(['list', 'kanban']);
-const workSourcePreferenceSchema = z.enum(['linear', 'github', 'jira', 'gitlab']);
+const workSourcePreferenceSchema = z.enum([
+  'linear',
+  'github',
+  'jira',
+  'gitlab',
+  'bbtasks'
+]);
 const workStateCategoryPreferenceSchema = z.enum([
   'backlog',
   'todo',

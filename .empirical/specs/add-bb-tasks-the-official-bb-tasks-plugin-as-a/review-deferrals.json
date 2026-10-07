@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "deferrals": [
+    {
+      "schemaVersion": 1,
+      "resultDigest": "sha256:d226c474154cfd4cdec25cd6c9b849eb89a273e9169cd8fdf3dd68cbb9fbbc41",
+      "findingIds": [
+        "F-3"
+      ],
+      "reason": "Non-blocking review findings are deferred automatically so they never start another fix lap; track them as a follow-up.",
+      "ticket": null,
+      "recordedAt": "2026-10-06T16:53:36.743Z"
+    },
+    {
+      "schemaVersion": 1,
+      "resultDigest": "sha256:39b96c78c1e72a24b3ad23f0ee34be811e71dfdf0b8c789cf98489d0f85d7070",
+      "findingIds": [
+        "F-3"
+      ],
+      "reason": "Non-blocking review findings are deferred automatically so they never start another fix lap; track them as a follow-up.",
+      "ticket": null,
+      "recordedAt": "2026-10-06T18:50:56.988Z"
+    }
+  ]
+}

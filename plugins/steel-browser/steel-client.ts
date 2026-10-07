@@ -78,13 +78,17 @@ function normalizeSession(session: z.infer<typeof upstreamSessionSchema>): Brows
 
 export class SteelClient {
   readonly baseUrl: URL;
+  readonly fetcher: typeof fetch;
+  readonly timeoutMs: number;
 
   constructor(
     endpoint: string,
-    private readonly fetcher: typeof fetch = fetch,
-    private readonly timeoutMs = DEFAULT_TIMEOUT_MS,
+    fetcher: typeof fetch = fetch,
+    timeoutMs = DEFAULT_TIMEOUT_MS,
   ) {
     this.baseUrl = normalizeBaseUrl(endpoint);
+    this.fetcher = fetcher;
+    this.timeoutMs = timeoutMs;
   }
 
   private url(path: string): URL {

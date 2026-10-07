@@ -1,0 +1,115 @@
+{
+  "schemaVersion": 1,
+  "feature": "add-bb-tasks-the-official-bb-tasks-plugin-as-a",
+  "lastSequence": 13,
+  "lastEventDigest": "sha256:aa7aefa691f0ea0e96a9c230504fe6b7332b7536f1f43f58cad9ae123220bbd5",
+  "stateDigest": "sha256:3fb0ba8fdee92f767b9679fef997fb7437495ccd8a11326ea47d72c2617a1947",
+  "state": {
+    "schemaVersion": 5,
+    "revision": 13,
+    "activeFeature": "add-bb-tasks-the-official-bb-tasks-plugin-as-a",
+    "request": "Add BB Tasks (the official bb 'tasks' plugin) as a fifth tracker source 'bbtasks' in the taskboard plugin, at full parity with GitHub/GitLab/Linear/Jira.\n\nScope (approved plan: plans/2026-10-06_21-07_bb-tasks-taskboard-source.md):\n1. contract.ts: 'bbtasks' in workSourceSchema; bbTasksProjectId in projectSourceConfigSchema; bbTasksProjects list in projectConfigViewSchema; 'Tasks project' in destinationLabel enum; sourceName() -> 'BB Tasks'.\n2. New sources/bb-tasks.ts adapter implementing WorkSourceAdapter via bb.sdk.plugins.callRpc(pluginId:'tasks', ...) with locally re-declared zod schemas (listProjects with linkedBbProjectId, listTasks pagination, getTaskByKey, listComments, listLabels, createTask, updateTask); locator = task key; 6 fixed statuses mapped to workStateCategory (in_review -> in_progress); createIssueMetadata from fixed statuses/priorities + project labels; create via createTask; updateStatus via updateTask {authorName:'Taskboard'}; graceful configurationMessage when tasks plugin is missing.\n3. store.ts SQLite migration widening CHECK source enums on work_items_by_project/source_sync_by_project/project_source_config + bb_tasks_project_id column; config mapping updates.\n4. server.ts: SOURCES += 'bbtasks'; DEFAULT_PROJECT_CONFIG; adapters() branch; getCreateIssueContext destinations 'Tasks project' (linked tasks project default); changedSources/sameProjectConfig; CLI usage strings + --bb-tasks-project.\n5. app.tsx: SOURCE_FILTER_OPTIONS, TRACKER_OPTIONS, isWorkSource, sourceName, SourceGlyph, Manage tasks-project picker, hide Open button on empty url.\n6. Tests: contract.test.ts additions; new test/sources-bb-tasks.test.ts with fake callRpc.\n7. README sections + keywords + version 0.3.3 -> 0.4.0.\n\nUser decisions: source id 'bbtasks'; full write parity (issue creation + status moves); hide Open button when url is empty; updateStatus uses updateTask (not boardMove).",
+    "profile": "complex",
+    "workflow": "complex",
+    "mode": "normal",
+    "phase": "done",
+    "status": "done",
+    "repairAttempts": 0,
+    "message": "Integrated capability changes: bb-tasks-source",
+    "implementationActor": "agent",
+    "workStartedAt": null,
+    "specDigest": "sha256:c0a35f1991cd987d03426579604c71d8c3387cc972875685d821717fa1c72801",
+    "approvedSpecRevision": 2,
+    "capabilityArchiveRequired": true,
+    "capabilityDeltaDigest": "sha256:1f620c74da48db8df06708a06d9ebf6ecf3e1fe04e7edd2b5ebc9d4bc03d82c4",
+    "impactDigest": "sha256:16340d855dce4acf1972e0685cfe9c82acba3a1aac952eb9e718523523328d1c",
+    "capabilityClaimId": "add-bb-tasks-the-official-bb-tasks-plugin-as-a-2c636970f223",
+    "authorizationDigest": null,
+    "evidence": [],
+    "evidenceReceiptIds": [
+      "collected-637c64db332bc3788ef2a318",
+      "qa-bf6ba0ade6cfc8597d77f052",
+      "qa-e880ade09a173f63af5ee6c2",
+      "qa-e0156a1a079502470d66b609",
+      "qa-7f9e6d9a63dcde816ca630da",
+      "qa-c0c095beb2c32db9c2530351",
+      "qa-8ca733e61e1b27bf7667551d",
+      "qa-a73b3f04eb3b7404eb1f6b95",
+      "collected-f8187accfe320f0949aff3bf"
+    ],
+    "legacyEvidenceCount": 0,
+    "completion": {
+      "implemented": true,
+      "verified": true,
+      "integrated": true,
+      "delivered": false,
+      "published": false,
+      "highest": "integrated",
+      "reasons": {
+        "delivered": "delivered has not been proven by a durable receipt.",
+        "published": "published has not been proven by a durable receipt."
+      }
+    },
+    "updatedAt": "2026-10-07T01:47:23.376Z",
+    "capabilityBase": {
+      "schemaVersion": 1,
+      "id": "add-bb-tasks-the-official-bb-tasks-plugin-as-a-2c636970f223",
+      "repositoryId": "sha256:703b13956fbeb2dfe9d4cf7c34077de56a5c348c0f42f9ceef5c1cac794fbf42",
+      "feature": "add-bb-tasks-the-official-bb-tasks-plugin-as-a",
+      "worktree": "/Users/k.sidenko/.bb/plugins/environment-git-worktree/host-data/worktrees/thr_yjsdge7jku-1/bb-plugins",
+      "worktreeId": "sha256:d73b5e8914c7eaa2de18e3fe4d2e1b23002d94509cbbf39052c2f46873472e81",
+      "baseCommit": "ff4dec1308f8ae69d040eebdf77863182c7a45ca",
+      "baseTree": "9eade31a967c07001fea8523deb88097431fc03b",
+      "bases": {
+        "bb-tasks-source": {
+          "capability": "bb-tasks-source",
+          "digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "requirements": {
+            "bb tasks tracker selection": null,
+            "linked tasks project resolution": null,
+            "browse through the tasks plugin rpc": null,
+            "real tasks workflow statuses": null,
+            "create tasks issues": null,
+            "graceful availability": null,
+            "source enumeration includes bb tasks": null,
+            "detail external link is optional": null
+          }
+        }
+      },
+      "capabilities": [
+        "bb-tasks-source"
+      ],
+      "status": "active",
+      "integrationReceiptDigest": null,
+      "createdAt": "2026-10-06T15:42:17.767Z",
+      "heartbeatAt": "2026-10-06T15:42:17.767Z",
+      "digest": "sha256:72e505cf1f9bdebf47e7ad2b7dd3da9d19cfc63fb97f929e3db316c385a0aa91"
+    },
+    "sizeDecision": {
+      "choice": "keep",
+      "criteria": 12,
+      "capabilities": 1,
+      "reason": "One cohesive source adapter: contract enum, adapter, migration, wiring, UI, and tests ship as a single independently installable plugin minor (0.4.0); slicing would ship an unusable source without all layers.",
+      "actor": "agent",
+      "revision": 2
+    },
+    "budgetExtensionMinutes": 62,
+    "reviewFirst": true,
+    "completionRecord": {
+      "schemaVersion": 1,
+      "implementedBy": "agent",
+      "completedBy": "k.sidenko",
+      "decisionBy": null,
+      "method": "workflow",
+      "reason": "Integrated capability changes: bb-tasks-source",
+      "at": "2026-10-07T01:47:23.376Z",
+      "revision": 13,
+      "completion": "integrated",
+      "sourceTreeDigest": "sha256:1c17e03a12c880ce1ab4e909637068fdbc81e522a60078e7ce9ea708bae98916",
+      "artifactTreeDigest": "sha256:44814038b68d9a8a33ad5f99fed7d9a33ab4098240a2a67d339eebdbeff28607",
+      "digest": "sha256:20b828d15d66c0fdc671e62667dd283d6a9f0007d1182b53dc37b4f97cb96b64"
+    }
+  },
+  "compactedAt": "2026-10-07T01:47:24.474Z",
+  "digest": "sha256:144241a12d2521fbfc96f4ed2cafbaf1c4fab78984417b0820ef0ab7fa9a4298"
+}

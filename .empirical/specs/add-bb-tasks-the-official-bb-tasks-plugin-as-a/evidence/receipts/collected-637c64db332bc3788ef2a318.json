@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "id": "collected-637c64db332bc3788ef2a318",
+  "criteria": [
+    "AC-1",
+    "AC-2",
+    "AC-3",
+    "AC-4",
+    "AC-5",
+    "AC-6",
+    "AC-7",
+    "AC-8",
+    "AC-9",
+    "AC-UI-1",
+    "AC-UI-2",
+    "AC-UI-3"
+  ],
+  "evidenceKinds": [
+    "review"
+  ],
+  "summary": "fresh-context review approved the exact committed base diff",
+  "passed": true,
+  "startedAt": "2026-10-06T18:50:56.956Z",
+  "completedAt": "2026-10-06T18:50:56.956Z",
+  "provenance": {
+    "repositoryId": "sha256:703b13956fbeb2dfe9d4cf7c34077de56a5c348c0f42f9ceef5c1cac794fbf42",
+    "feature": "add-bb-tasks-the-official-bb-tasks-plugin-as-a",
+    "specRevision": 2,
+    "specDigest": "sha256:c0a35f1991cd987d03426579604c71d8c3387cc972875685d821717fa1c72801",
+    "treeDigest": "sha256:06eb327498b1a677518abc74836a441831b08bc687af3caf4e79eafe020d1b00",
+    "policyDigest": "sha256:c0bb465cea36f5a850cea8597bfb6db1e785851d9cad42c0517df2151d688c85"
+  },
+  "digest": "sha256:d7965dda172483891021561d3a8585072ebdecfea9107fb6c91a9eae4713731c",
+  "kind": "collected",
+  "collector": "empirical-review:empirical-reviewer-bbtasks (isolated fresh-context subagent, no authoring conversation)",
+  "artifacts": [
+    {
+      "path": ".empirical/specs/add-bb-tasks-the-official-bb-tasks-plugin-as-a/reviews/39b96c78c1e72a24b3ad23f0.json",
+      "mediaType": "application/json",
+      "bytes": 3441,
+      "digest": "sha256:c9e73e0f156639d04d3b888a2b8370eb12c9ba13dae43ad883e3a5aba062dde5"
+    },
+    {
+      "path": ".empirical/specs/add-bb-tasks-the-official-bb-tasks-plugin-as-a/reviews/39b96c78c1e72a24b3ad23f0.md",
+      "mediaType": "text/markdown",
+      "bytes": 2429,
+      "digest": "sha256:4c60245f25c719bddd7d4f4054b98c0c442aeb15f30162b388e0d1bed9202279"
+    }
+  ]
+}

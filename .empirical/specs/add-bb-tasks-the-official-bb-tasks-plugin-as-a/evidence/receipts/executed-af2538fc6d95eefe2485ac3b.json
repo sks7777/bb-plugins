@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "id": "executed-af2538fc6d95eefe2485ac3b",
+  "criteria": [
+    "AC-1",
+    "AC-2",
+    "AC-3",
+    "AC-4"
+  ],
+  "evidenceKinds": [
+    "test"
+  ],
+  "summary": "Policy verification command touchbar-focused",
+  "passed": true,
+  "startedAt": "2026-10-06T17:00:33.892Z",
+  "completedAt": "2026-10-06T17:00:37.407Z",
+  "provenance": {
+    "repositoryId": "sha256:703b13956fbeb2dfe9d4cf7c34077de56a5c348c0f42f9ceef5c1cac794fbf42",
+    "feature": "add-bb-tasks-the-official-bb-tasks-plugin-as-a",
+    "specRevision": 2,
+    "specDigest": "sha256:c0a35f1991cd987d03426579604c71d8c3387cc972875685d821717fa1c72801",
+    "treeDigest": "sha256:2b4d0f3186103aba91264139f0f9d11ba891aaa71f6b62d6b83c46b984238a34",
+    "policyDigest": "sha256:4aedcfe7f723bdfc2b5d92de7eacf6bac553de4731715c9d0f84dc58dd5754bd"
+  },
+  "digest": "sha256:2bfc133960c3e9be5af5d0718aa7a69b4e0ebe1a1dce00d7c888bdc70489fd51",
+  "kind": "executed",
+  "command": {
+    "argv": [
+      "npm",
+      "run",
+      "check",
+      "--workspace",
+      "bb-plugin-touchbar"
+    ],
+    "cwd": ".",
+    "timeoutMs": 120000,
+    "maxOutputBytes": 1048576,
+    "environmentKeys": [
+      "PATH"
+    ]
+  },
+  "result": {
+    "exitCode": 0,
+    "signal": null,
+    "timedOut": false,
+    "stdoutDigest": "sha256:1f83a9ff75a9990752e5d31a03d54853ecc6268fdf217895100d23751c78d3db",
+    "stderrDigest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdoutTail": "\n> bb-plugin-touchbar@0.1.1 check\n> npm run types:check && npm run typecheck && npm test && npm run build\n\n\n> bb-plugin-touchbar@0.1.1 types:check\n> env -u BB_CLI bb plugin types --check .\n\nThis plugin uses the npm package @get-bb/plugin-sdk; pin is 0.4.21, host is 0.4.21.\nThe declarations are in node_modules/@get-bb/plugin-sdk/bundled-types/ — read them for exact signatures.\n\n> bb-plugin-touchbar@0.1.1 typecheck\n> tsc --noEmit\n\n\n> bb-plugin-touchbar@0.1.1 test\n> node --import tsx --test test/*.test.ts\n\n✔ BetterTouchTool preset is global, persistent, bounded, and action-safe (1.131125ms)\n✔ companion scripts are POSIX-shell parseable and avoid eval (22.434417ms)\n✔ Swift source plugin renders native status cards with safe BB actions (0.391667ms)\n✔ package includes every companion and excludes a frontend entry (0.295708ms)\n✔ native app owns the Control Strip and fullscreen panel without physical stop (58.401875ms)\n✔ snapshot returns bounded JSON and queries hidden rows explicitly (6.36025ms)\n✔ snapshot includes bounded weekly subscription percentages (1.089583ms)\n✔ settings expose hidden-worker privacy and card count (0.821125ms)\n✔ open resolves and opens exactly one eligible thread (0.816083ms)\n✔ stop rejects idle and unknown threads without mutation (1.249792ms)\n✔ stop mutates exactly one active thread and malformed commands fail (0.875584ms)\n✔ card and open-card share the same deterministic current slot (0.976084ms)\n✔ card limit clamps invalid, low, and high settings (0.474583ms)\n✔ compact text removes controls, whitespace, and bounds user text (0.175042ms)\n✔ runtime states map to stable compact states (0.111083ms)\n✔ snapshot prioritizes attention and active work deterministically (0.624542ms)\n✔ hidden, archived, and deleted threads are excluded by default (8.857541ms)\n✔ summary and cards stay compact and useful (0.140583ms)\nℹ tests 18\nℹ suites 0\nℹ pass 18\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 393.669792\n\n> bb-plugin-touchbar@0.1.1 build\n> env -u BB_CLI bb plugin build .\n\ndist/server.js\ndist/server.js.map\ndist/server.meta.json\n",
+    "stderrTail": "",
+    "stdoutTruncated": false,
+    "stderrTruncated": false
+  }
+}

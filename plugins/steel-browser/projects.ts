@@ -17,7 +17,13 @@ export class ProjectBrowsers {
   private provisioning: Promise<unknown> = Promise.resolve();
   private active = new Map<string, Promise<Binding>>();
   private recentlyReady = new Map<string, { binding: Binding; checkedAt: number }>();
-  constructor(private readonly kv: PluginKvStorage, private readonly now = () => performance.now()) {}
+  readonly kv: PluginKvStorage;
+  readonly now: () => number;
+
+  constructor(kv: PluginKvStorage, now: () => number = () => performance.now()) {
+    this.kv = kv;
+    this.now = now;
+  }
 
   async ensure(projectId: string, provision: (projectId: string, existing: Binding | null) => Promise<Binding>,
     ready?: (binding: Binding) => Promise<boolean>): Promise<Binding> {

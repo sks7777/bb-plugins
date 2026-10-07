@@ -128,7 +128,8 @@ test('store defaults existing projects to no finished window and persists it', (
       jiraBaseUrl: '',
       jiraEmail: '',
       jiraJql: 'order by updated',
-      gitlabProjectRef: ''
+      gitlabProjectRef: '',
+      bbTasksProjectId: ''
     };
     const ensured = store.ensureProjectConfig('proj_alpha', defaults);
     assert.equal(ensured.linearFinishedDays, 0);

@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "packetDigest": "sha256:bdde540bb25592c7c92cabe5f2ed7d290573f4d09d2fe023577b4090e3fda77d",
+  "mode": "fresh-context",
+  "baseRef": "main",
+  "baseCommit": "ff4dec1308f8ae69d040eebdf77863182c7a45ca",
+  "headCommit": "58f8dd6e4df126215fedf09025c3eeca728768c3",
+  "diffDigest": "sha256:4f7f6df42bfb069fcaa045084d6fb5417fea118957f07d367f3c157a03b996f0",
+  "verdict": "APPROVED",
+  "reviewerActor": "empirical-reviewer-bbtasks (isolated fresh-context subagent, no authoring conversation)",
+  "reviewerInvocationId": "sub-6aa5afed",
+  "reviewerLogin": null,
+  "body": "# Verdict: APPROVED\n\n- PASS AC-1: Unchanged by delta: TRACKER_OPTIONS adds bbtasks ('BB Tasks'); save persists source + bbTasksProjectId via saveProjectConfig to bb_tasks_project_id and survives reload.\n- PASS AC-2: Unchanged by delta: list() resolves linked project (override wins), maps key/title/status/priority/labels/updatedAt from Tasks RPC, cached through syncOne -> replaceSource.\n- PASS AC-3: Unchanged by delta: get() uses getTaskByKey + listComments + listLabels, labels resolved to names, comments mapped.\n- PASS AC-4: Unchanged by delta: six statuses, in_review->in_progress mapping, updateStatus routes tasks updateTask with authorName 'Taskboard'.\n- PASS AC-5: Spot-checked at 58f8dd6e: happy path unchanged (destinationLabel 'Tasks project', 6 statuses/5 priorities/labels/dueDate metadata, createTask, mention labeled with item.key); with F-4's fix an unresolvable destination now yields the specific problem message instead of only the generic fallback.\n- PASS AC-6: Spot-checked at 58f8dd6e: missing plugin/link still surface in board status (setSourceError) and create-issue context (available=false, no crash); the context message is now the specific resolution problem where one exists.\n- PASS AC-7: Unchanged by delta: three tables recreated with 'bbtasks' CHECK constraints, rows copied, indexes recreated 1:1, bb_tasks_project_id added with '' default.\n- PASS AC-8: Spot-checked at 58f8dd6e: usage strings, --source validation, and --bb-tasks-project all accept bbtasks; the five source-validation error texts now match the advertised sources.\n- PASS AC-9: Spot-checked at 58f8dd6e: contract test updated for the new placeholder; taskboard npm run check green (155/155 tests, build + verify:build pass); root-check-only failure remains the pre-existing unrelated steel-browser Node-26 flag issue.\n- PASS AC-UI-1: Unchanged by delta: SourceGlyph + 'BB Tasks' in tracker options, SourceMark on detail, glyph on rows.\n- PASS AC-UI-2: Unchanged by delta: Tasks-project picker with linked marker; SOURCE_FILTER_OPTIONS includes bbtasks.\n- PASS AC-UI-3: Unchanged by delta: Open button hidden for empty URL; key, status menu, Add to chat retained.\n\n## Security / correctness\n\nNo security findings at 58f8dd6e: no credentials stored, Tasks-plugin RPC I/O host-validated through zod, mention ids revalidated, migration preserves rows. Correctness limited to the accepted low finding F-3.\n\n## Design / maintainability\n\nAdapter follows the established GitHub plugin-RPC pattern with locally declared schemas; migration follows the proven gitlab recreate pattern 1:1. One accepted low design note: the disabled-adapter branch is unreachable from server wiring (unit-tested).",
+  "bodyDigest": "sha256:ccb2d27e073aaf05bbea97ab5a66beb720e70e0e245aa3c7f52ff09995d66ce7",
+  "findings": [
+    {
+      "id": "F-3",
+      "severity": "low",
+      "category": "design",
+      "summary": "Adapter 'enabled' flag hardcoded true makes the disabled branch unreachable (accepted by author)"
+    }
+  ],
+  "digest": "sha256:d226c474154cfd4cdec25cd6c9b849eb89a273e9169cd8fdf3dd68cbb9fbbc41"
+}

@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "id": "qa-cc42f6627f873db7c288d4e1",
+  "criteria": [
+    "AC-1",
+    "AC-2",
+    "AC-3",
+    "AC-4",
+    "AC-5",
+    "AC-6",
+    "AC-7",
+    "AC-UI-1"
+  ],
+  "evidenceKinds": [
+    "test"
+  ],
+  "summary": "Final-profile qa-unit execution of taskboard-focused for the BB Tasks source feature.",
+  "passed": true,
+  "startedAt": "2026-10-06T18:10:16.225Z",
+  "completedAt": "2026-10-06T18:10:24.755Z",
+  "provenance": {
+    "repositoryId": "sha256:703b13956fbeb2dfe9d4cf7c34077de56a5c348c0f42f9ceef5c1cac794fbf42",
+    "feature": "add-bb-tasks-the-official-bb-tasks-plugin-as-a",
+    "specRevision": 2,
+    "specDigest": "sha256:c0a35f1991cd987d03426579604c71d8c3387cc972875685d821717fa1c72801",
+    "treeDigest": "sha256:06eb327498b1a677518abc74836a441831b08bc687af3caf4e79eafe020d1b00",
+    "policyDigest": "sha256:c0bb465cea36f5a850cea8597bfb6db1e785851d9cad42c0517df2151d688c85",
+    "workflowRevision": 7,
+    "gitCommit": "58f8dd6e4df126215fedf09025c3eeca728768c3",
+    "textTreeDigest": "sha256:06eb327498b1a677518abc74836a441831b08bc687af3caf4e79eafe020d1b00"
+  },
+  "digest": "sha256:8a678e1f1cf3c3cf3026cbc2e6601783e4c0384ae09aa5246bc61a113c36d0e4",
+  "kind": "qa",
+  "matrixDigest": "sha256:6899e48c9a488e9136bcf6439e47a7b3fd44c34843dc62b860675432144a44fc",
+  "check": {
+    "id": "qa-unit",
+    "kind": "unit"
+  },
+  "coveredChecks": [
+    "unit"
+  ],
+  "platform": {
+    "os": "darwin",
+    "arch": "arm64",
+    "node": "26.7.0",
+    "bun": null
+  },
+  "attempts": [
+    {
+      "number": 1,
+      "outcome": "passed",
+      "summary": "Final-profile qa-unit execution of taskboard-focused for the BB Tasks source feature.",
+      "startedAt": "2026-10-06T18:10:16.225Z",
+      "completedAt": "2026-10-06T18:10:24.755Z",
+      "durationMs": 8530,
+      "collector": null,
+      "command": {
+        "executableDigest": "sha256:6f6b821881c80f8aacc718d5c4010dfc33bae3f3cbd436200a5684adb5916dd5",
+        "argv": [
+          "npm",
+          "run",
+          "check",
+          "--workspace",
+          "bb-plugin-taskboard"
+        ],
+        "cwd": ".",
+        "timeoutMs": 120000,
+        "maxOutputBytes": 1048576,
+        "environmentKeys": [
+          "NO_COLOR",
+          "PATH",
+          "TMPDIR"
+        ]
+      },
+      "result": {
+        "exitCode": 0,
+        "signal": null,
+        "timedOut": false,
+        "stdoutDigest": "sha256:a1ca398c5a6724fdd5a82d45e968fe9b23b0a137f239bf4150de8f220771ec3d",
+        "stderrDigest": "sha256:8b7e517435573fe062531ac297111c7f931443f4c7151738467427dc3cef8d1a",
+        "stdoutTail": "sized, unsafe, and expanded drag payloads (0.163792ms)\n✔ fails closed when an item cannot form a safe mention or DataTransfer rejects it (0.111709ms)\n✔ delimits useful issue facts as untrusted external tracker data (0.988083ms)\n✔ keeps instruction-like issue text inside the untrusted boundary (0.558875ms)\n✔ prefixes control-character line separators inside external data (1.617834ms)\n✔ visibly escapes every C1 and bidirectional control inside ordered boundaries (0.574875ms)\n✔ visibly escapes every C0 control in inline CLI fields (0.184667ms)\n✔ keeps JSON CLI output readable around external controls (0.136416ms)\n✔ keeps detail handoff intent trusted while issue text stays inside the boundary (0.185375ms)\n✔ defaults optional provider-native issue creation properties (1.076042ms)\n✔ validates expanded provider-native issue creation properties (0.857167ms)\n✔ validates creation metadata and warning-bearing RPC results (4.414ms)\n✔ returns authoritative provider identity with cached list results (0.205208ms)\n✔ bbtasks is a registered taskboard source (0.087084ms)\n✔ project source config carries the bb tasks project id (0.4405ms)\n✔ project config view carries bb tasks projects and availability (0.420458ms)\n✔ create issue context accepts the Tasks project destination label (0.040208ms)\n✔ handoff context renders a BB Tasks note in place of an empty URL (0.083375ms)\n✔ Linear maps native metadata and sends it in IssueCreateInput (40.168458ms)\n✔ Linear paginates create options independently and preserves the native default state (12.217958ms)\n✔ Linear rejects invalid creation metadata cursors (3.872458ms)\n✔ Linear keeps explicit create rejection retryable without the uncertain marker (4.418875ms)\n✔ Linear marks malformed or lost post-dispatch create responses uncertain (7.162125ms)\n✔ Jira derives native fields from createmeta and forwards selections (3.74575ms)\n✔ Jira marks ambiguous create acknowledgement and detail failures uncertain (2.711583ms)\n✔ Jira paginates create metadata and canonicalizes issue types to native IDs (0.83025ms)\n✔ Jira exposes only priorities allowed for the selected project and issue type (0.265334ms)\n✔ GitHub loads native metadata and reports partially applied fields (2.204833ms)\n✔ GitHub confirms the submitted assignee from native response membership (0.450208ms)\n✔ GitHub paginates and deduplicates every create metadata collection (0.300125ms)\n✔ GitHub queues a fresh reconciliation after an overlapping pre-create refresh (0.598083ms)\n✔ GitHub queues a post-write refresh when issue confirmation is ambiguous (0.248709ms)\n✔ GitHub forced reconciliation refreshes before listing only project-scoped repos (0.124958ms)\n✔ keeps Taskboard private and Git-buildable without npm publication hooks (0.583375ms)\n✔ documents only BB Community and direct Git installation for Taskboard (0.773541ms)\n✔ keeps Usage Tracker private and documents its Git release too (2.813458ms)\n✔ has no active registry publication automation or credential path (0.420042ms)\n✔ credits merged contributors without reviving superseded filter storage (3.152417ms)\n✔ appends only the preset migration and round-trips complete state (73.463ms)\n✔ isolates names and ids between projects (4.382375ms)\n✔ contains corrupt rows and makes reorder exact and atomic (6.067667ms)\n✔ enforces the per-project preset limit without blocking updates (14.806375ms)\n✔ bounds reads and fails closed when raw rows exceed the preset limit (10.834042ms)\n✔ rejects --from-state on wrong verbs and preserves explicit precedence (0.432167ms)\n✔ keeps maximum aggregate preset JSON compact and under the CLI cap (8.067083ms)\n✔ enforces a transactional aggregate state-byte limit per project (33.856875ms)\n✔ accepts a complete strict project browse preference snapshot (14.738958ms)\n✔ requires a project provider and matching source (0.432ms)\n✔ bounds names, ids, positions, order size, and state fields (0.7695ms)\n✔ rejects control characters in preset identity and state (0.520708ms)\n✔ rejects oversized adversarial containers before inspecting elements (0.229334ms)\n✔ accepts the maximum valid browse state inside the UTF-8 envelope (15.117375ms)\n✔ normalizes unique names without depending on locale (0.298917ms)\n✔ resolves only exact preset order permutations (0.282208ms)\n✔ Linear sync excludes finished issues when the window is off (19.006375ms)\n✔ Linear sync includes issues finished within the window (0.616042ms)\n✔ finished window is a bounded whole number of days (1.264916ms)\n✔ CLI parses --linear-finished-days as days (0.355667ms)\n✔ store defaults existing projects to no finished window and persists it (11.590542ms)\n✔ selects the active thread project only when it still exists (0.507083ms)\n✔ treats a different thread in the same project as new context (0.102625ms)\n✔ reads the project and thread from a BB project route (0.482875ms)\n✔ uses only the immediately previous navigation entry as source context (0.104459ms)\n✔ never replaces an explicit Taskboard project selection with route context (0.086375ms)\n✔ writes project credentials atomically with owner-only permissions (10.523375ms)\n✔ deleting a missing credential is harmless (1.558167ms)\n✔ cached summaries never retain provider comments (1.425ms)\n✔ provider creation results carry strict native assignee confirmation (0.15125ms)\n✔ metadata failures expose only a fixed server-safe message (0.31825ms)\n✔ finds Jira project keys from common configured JQL scopes (0.898959ms)\n✔ binds issue creation to the tracker reviewed in the modal (0.362166ms)\n✔ refreshes authoritative provider data after successful issue creation (0.917959ms)\n✔ refreshes authoritative provider data after ambiguous issue creation failure (0.166375ms)\n✔ task status mapping collapses in_review into in_progress (0.640708ms)\n✔ task keys validate (0.189875ms)\n✔ linked project resolves automatically (0.106458ms)\n✔ override by id or prefix wins (0.086666ms)\n✔ no linked project reports a problem (0.113708ms)\n✔ unknown override reports a problem (0.058333ms)\n✔ list maps tasks with label names and no URL (0.77225ms)\n✔ list paginates until the cursor ends (0.170541ms)\n✔ get resolves comments and label names (0.184ms)\n✔ get rejects malformed keys (0.32275ms)\n✔ statusOptions mark the current status (0.13775ms)\n✔ createMetadata offers tasks statuses, priorities, labels, due date (0.216917ms)\n✔ create calls createTask and returns the task without assignee (0.243542ms)\n✔ create unwraps ok:false into a thrown error (0.108041ms)\n✔ updateStatus routes through updateTask with the Taskboard author (0.242583ms)\n✔ updateStatus rejects unknown statuses (0.376917ms)\n✔ plugin-unavailable probe fails gracefully (0.106917ms)\n✔ disabled adapter reports unconfigured (0.049542ms)\n✔ gitlab is a registered taskboard source (0.631208ms)\n✔ refs must be host-qualified paths (0.631208ms)\n✔ locators round-trip with ref and iid (0.188292ms)\n✔ status label categories cover the five states (0.086917ms)\n✔ status labels filter out unrelated labels (0.270667ms)\n✔ state category prefers workflow labels over native state (0.070166ms)\n✔ status name shows the workflow column name or the native state (0.064083ms)\n✔ cached summaries never retain provider comments (0.075792ms)\n✔ untriaged issues keep native open/closed choices current-flagged (0.079167ms)\n✔ stripped status names keep facet and dropdown consistent (0.101292ms)\n✔ token line is parsed from glab stderr output (0.233791ms)\n✔ keeps structural headers on neutral host theme surfaces (0.961917ms)\n✔ uses restrained state glyph, focus, and conversation treatments (0.322583ms)\n✔ keeps constrained filter values inside the vertical menu measure (0.147417ms)\n✔ keeps assignee avatars compact with six theme-safe identity tones (0.399292ms)\n✔ shows restrained composer drop feedback and discoverable drag grips (0.290375ms)\nℹ tests 155\nℹ suites 0\nℹ pass 155\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 592.099916\n\n> bb-plugin-taskboard@0.4.0 build\n> env -u BB_CLI bb plugin build .\n\ndist/server.js\ndist/server.js.map\ndist/server.meta.json\ndist/app.js\ndist/app.css\ndist/app.meta.json\n\n> bb-plugin-taskboard@0.4.0 verify:build\n> node scripts/verify-build.mjs\n\nTaskboard build metadata is valid.\n",
+        "stderrTail": "(node:65940) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.\n(Use `node --trace-deprecation ...` to show where the warning was created)\n",
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      "cleanStart": false,
+      "sourceTreeBefore": "sha256:06eb327498b1a677518abc74836a441831b08bc687af3caf4e79eafe020d1b00",
+      "sourceTreeAfter": "sha256:06eb327498b1a677518abc74836a441831b08bc687af3caf4e79eafe020d1b00",
+      "artifacts": []
+    }
+  ],
+  "anomalies": []
+}

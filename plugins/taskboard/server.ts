@@ -59,6 +59,7 @@ import {
   glabStatusProbe,
   parseGitlabRef
 } from './sources/gitlab.js';
+import { createBbTasksAdapter, resolveBbTasksContext } from './sources/bb-tasks.js';
 import { createJiraAdapter } from './sources/jira.js';
 import { jiraProjectKeysFromJql } from './sources/jira-scope.js';
 import { createLinearAdapter } from './sources/linear.js';
@@ -71,7 +72,13 @@ import {
 } from './sources/types.js';
 import { createWorkItemStore } from './store.js';
 
-const SOURCES: readonly WorkSource[] = ['linear', 'github', 'jira', 'gitlab'];
+const SOURCES: readonly WorkSource[] = [
+  'linear',
+  'github',
+  'jira',
+  'gitlab',
+  'bbtasks'
+];
 const CREDENTIAL_SOURCES: readonly CredentialSource[] = ['linear', 'jira'];
 const SYNC_INTERVAL_MS = 5 * 60_000;
 const BOOT_SYNC_DELAY_MS = 2_500;
@@ -87,7 +94,8 @@ const DEFAULT_PROJECT_CONFIG = {
   jiraEmail: '',
   jiraJql:
     'assignee = currentUser() AND resolution = Unresolved ORDER BY updated DESC',
-  gitlabProjectRef: ''
+  gitlabProjectRef: '',
+  bbTasksProjectId: ''
 } satisfies Omit<ProjectSourceConfig, 'projectId'>;
 
 function errorMessage(error: unknown): string {
@@ -172,6 +180,7 @@ interface ParsedCliArguments {
   jiraEmail: string | undefined;
   jiraJql: string | undefined;
   gitlabProject: string | undefined;
+  bbTasksProject: string | undefined;
   statusId: string | undefined;
   preset: string | undefined;
   fromState: string | undefined;
@@ -207,6 +216,7 @@ const CLI_OPTIONS_BY_COMMAND = new Map<string, ReadonlySet<string>>([
       '--jira-email',
       '--jira-jql',
       '--gitlab-project',
+      '--bb-tasks-project',
       '--json'
     ])
   ],
@@ -232,6 +242,7 @@ export function parseTaskboardCliArguments(
   let jiraEmail: string | undefined;
   let jiraJql: string | undefined;
   let gitlabProject: string | undefined;
+  let bbTasksProject: string | undefined;
   let statusId: string | undefined;
   let preset: string | undefined;
   let fromState: string | undefined;
@@ -303,6 +314,9 @@ export function parseTaskboardCliArguments(
     } else if (argument === '--gitlab-project') {
       gitlabProject = valueAfter(argument, index);
       index += 1;
+    } else if (argument === '--bb-tasks-project') {
+      bbTasksProject = valueAfter(argument, index);
+      index += 1;
     } else if (argument === '--status') {
       statusId = valueAfter(argument, index);
       index += 1;
@@ -341,6 +355,7 @@ export function parseTaskboardCliArguments(
     jiraEmail,
     jiraJql,
     gitlabProject,
+    bbTasksProject,
     statusId,
     preset,
     fromState,
@@ -394,7 +409,8 @@ function formatProjectConfig(config: ProjectConfigView): string {
     `Jira credential\t${config.jiraCredentialConfigured ? 'configured' : 'not configured'}`,
     `Jira JQL\t${config.jiraJql}`,
     `GitLab project\t${config.gitlabProjectRef || 'not configured'}`,
-    `GitLab (glab)\t${config.gitlabConfigured ? 'authenticated' : 'not authenticated'}`
+    `GitLab (glab)\t${config.gitlabConfigured ? 'authenticated' : 'not authenticated'}`,
+    `BB Tasks\t${config.bbTasksProjectId || 'linked project'}`
   ].join('\n');
 }
 
@@ -653,7 +669,8 @@ export default async function plugin(bb: BbPluginApi) {
       linear: currentRevision(projectId, 'linear'),
       github: currentRevision(projectId, 'github'),
       jira: currentRevision(projectId, 'jira'),
-      gitlab: currentRevision(projectId, 'gitlab')
+      gitlab: currentRevision(projectId, 'gitlab'),
+      bbtasks: currentRevision(projectId, 'bbtasks')
     };
   }
 
@@ -772,7 +789,7 @@ export default async function plugin(bb: BbPluginApi) {
   async function buildProjectConfigView(
     config: ProjectSourceConfig
   ): Promise<ProjectConfigView> {
-    const [linearCredentialConfigured, jiraCredentialConfigured, gitlabConfigured, githubRepos] =
+    const [linearCredentialConfigured, jiraCredentialConfigured, gitlabConfigured, githubRepos, bbTasks] =
       await Promise.all([
         credentials.configured(config.projectId, 'linear'),
         credentials.configured(config.projectId, 'jira'),
@@ -788,14 +805,32 @@ export default async function plugin(bb: BbPluginApi) {
             outputSchema: githubStatusOutputSchema
           })
           .then(status => githubReposForProject(status, config.projectId))
-          .catch(() => fallbackGithubRepos(config.projectId))
+          .catch(() => fallbackGithubRepos(config.projectId)),
+        resolveBbTasksContext(
+          bb,
+          config.projectId,
+          config.bbTasksProjectId
+        ).then(context => ({
+          projects: context.projects,
+          configured: true
+        })).catch(() => ({
+          projects: [] as {
+            id: string;
+            name: string;
+            prefix: string;
+            linkedBbProjectId: string | null;
+          }[],
+          configured: false
+        }))
       ]);
     return {
       ...config,
       githubRepos,
       linearCredentialConfigured,
       jiraCredentialConfigured,
-      gitlabConfigured
+      gitlabConfigured,
+      bbTasksProjects: bbTasks.projects,
+      bbTasksConfigured: bbTasks.configured
     };
   }
 
@@ -856,6 +891,7 @@ export default async function plugin(bb: BbPluginApi) {
     const adapter = currentAdapters.get(config.source);
     if (!adapter) throw new Error(`Missing ${config.source} adapter`);
 
+    let bbTasksMessage: string | null = null;
     const destinationLabel =
       config.source === 'github'
         ? 'Repository'
@@ -863,7 +899,27 @@ export default async function plugin(bb: BbPluginApi) {
           ? 'Team'
           : config.source === 'gitlab'
             ? 'GitLab project'
-            : 'Project key';
+            : config.source === 'bbtasks'
+              ? 'Tasks project'
+              : 'Project key';
+    let bbTasksDestinationIds: string[] = [];
+    let bbTasksDestinationLabels = new Map<string, string>();
+    if (config.source === 'bbtasks') {
+      try {
+        const resolved = await resolveBbTasksContext(
+          bb,
+          projectId,
+          config.bbTasksProjectId
+        );
+        bbTasksDestinationIds = resolved.destinationIds;
+        bbTasksDestinationLabels = resolved.destinationLabels;
+        if (resolved.problem !== null) {
+          bbTasksMessage = resolved.problem;
+        }
+      } catch (error) {
+        bbTasksMessage = errorMessage(error);
+      }
+    }
     let githubMessage: string | null = null;
     let githubRepos = config.githubRepos;
     if (config.source === 'github') {
@@ -890,8 +946,13 @@ export default async function plugin(bb: BbPluginApi) {
             ? config.gitlabProjectRef
               ? [config.gitlabProjectRef]
               : []
-            : jiraProjectKeysFromJql(config.jiraJql);
-    const destinations = destinationIds.map(id => ({ id, label: id }));
+            : config.source === 'bbtasks'
+              ? bbTasksDestinationIds
+              : jiraProjectKeysFromJql(config.jiraJql);
+    const destinations = destinationIds.map(id => ({
+      id,
+      label: bbTasksDestinationLabels.get(id) ?? id
+    }));
     const missingDestinationMessage =
       config.source === 'github' && destinations.length === 0
         ? 'Map at least one GitHub repository to this BB project.'
@@ -899,9 +960,12 @@ export default async function plugin(bb: BbPluginApi) {
           ? 'Choose a Linear team key for this BB project in Manage.'
           : config.source === 'gitlab' && destinations.length === 0
             ? 'Choose a GitLab project (host/path) for this BB project in Manage.'
-            : null;
+            : config.source === 'bbtasks' && destinations.length === 0
+              ? 'Link a BB Tasks project to this BB project or choose one in Manage.'
+              : null;
     const configurationMessage =
       githubMessage ??
+      bbTasksMessage ??
       (adapter.configured() ? null : adapter.configurationMessage());
 
     return {
@@ -1000,7 +1064,14 @@ export default async function plugin(bb: BbPluginApi) {
               })
             : config.source === 'gitlab'
               ? createGitlabAdapter(bb, true, projectId, config.gitlabProjectRef)
-              : createGithubAdapter(bb, true, projectId);
+              : config.source === 'bbtasks'
+                ? createBbTasksAdapter(
+                    bb,
+                    true,
+                    projectId,
+                    config.bbTasksProjectId
+                  )
+                : createGithubAdapter(bb, true, projectId);
       return new Map([[config.source, adapter]]);
     }
   }
@@ -1219,6 +1290,9 @@ export default async function plugin(bb: BbPluginApi) {
       next.jiraCredential.operation !== 'keep'
     ) {
       changed.add('jira');
+    }
+    if (previous.bbTasksProjectId !== next.bbTasksProjectId) {
+      changed.add('bbtasks');
     }
     return [...changed];
   }
@@ -1945,38 +2019,38 @@ export default async function plugin(bb: BbPluginApi) {
         summary: 'List cached project work, refreshing first by default',
         usage:
           'bb taskboard list [--project <proj_id>] ' +
-          '[--source linear|github|jira|gitlab] [--query <text>] ' +
+          '[--source linear|github|jira|gitlab|bbtasks] [--query <text>] ' +
           '[--preset <name>] [--cached] [--json]'
       },
       {
         name: 'show',
         summary: 'Fetch one external issue in a BB project',
         usage:
-          'bb taskboard show <linear|github|jira|gitlab> <locator> [--project <proj_id>] [--json]'
+          'bb taskboard show <linear|github|jira|gitlab|bbtasks> <locator> [--project <proj_id>] [--json]'
       },
       {
         name: 'transitions',
         summary: 'List valid status targets for one external issue',
         usage:
-          'bb taskboard transitions <linear|github|jira|gitlab> <locator> [--project <proj_id>] [--json]'
+          'bb taskboard transitions <linear|github|jira|gitlab|bbtasks> <locator> [--project <proj_id>] [--json]'
       },
       {
         name: 'move',
         summary: 'Move one external issue to an exact listed status id',
         usage:
-          'bb taskboard move <linear|github|jira|gitlab> <locator> --status <id> [--project <proj_id>] [--json]'
+          'bb taskboard move <linear|github|jira|gitlab|bbtasks> <locator> --status <id> [--project <proj_id>] [--json]'
       },
       {
         name: 'refresh',
         summary: "Refresh a BB project's external issue caches",
         usage:
-          'bb taskboard refresh [linear|github|jira|gitlab] [--project <proj_id>] [--json]'
+          'bb taskboard refresh [linear|github|jira|gitlab|bbtasks] [--project <proj_id>] [--json]'
       },
       {
         name: 'config',
         summary: 'Show or update nonsecret project connector configuration',
         usage:
-          'bb taskboard config [--project <proj_id>] [--source linear|github|jira|gitlab] [--linear-team <key>] [--jira-url <url>] [--jira-email <email>] [--jira-jql <text>] [--gitlab-project <ref>] [--json]'
+          'bb taskboard config [--project <proj_id>] [--source linear|github|jira|gitlab|bbtasks] [--linear-team <key>] [--jira-url <url>] [--jira-email <email>] [--jira-jql <text>] [--gitlab-project <ref>] [--bb-tasks-project <id-or-prefix>] [--json]'
       },
       {
         name: 'credentials',
@@ -2045,7 +2119,7 @@ export default async function plugin(bb: BbPluginApi) {
         if (command === 'refresh') {
           if (args.positionals.length > 1) {
             throw new Error(
-              'Usage: bb taskboard refresh [linear|github|jira|gitlab] [--project <proj_id>] [--json]'
+              'Usage: bb taskboard refresh [linear|github|jira|gitlab|bbtasks] [--project <proj_id>] [--json]'
             );
           }
           const project = await requireProject();
@@ -2054,7 +2128,7 @@ export default async function plugin(bb: BbPluginApi) {
             ? workSourceSchema.safeParse(sourceValue)
             : null;
           if (parsedSource && !parsedSource.success) {
-            throw new Error('Source must be linear, github, jira, or gitlab');
+            throw new Error('Source must be linear, github, jira, gitlab, or bbtasks');
           }
           const source = parsedSource?.data;
           const sources = await syncAll(project.id, source, true);
@@ -2090,7 +2164,7 @@ export default async function plugin(bb: BbPluginApi) {
           if (args.positionals.length > 0) {
             throw new Error(
               'Usage: bb taskboard list [--project <proj_id>] ' +
-                '[--source linear|github|jira|gitlab] [--query <text>] ' +
+                '[--source linear|github|jira|gitlab|bbtasks] [--query <text>] ' +
                 '[--preset <name>] [--cached] [--json]'
             );
           }
@@ -2099,7 +2173,7 @@ export default async function plugin(bb: BbPluginApi) {
             ? workSourceSchema.safeParse(sourceValue)
             : null;
           if (parsedSource && !parsedSource.success) {
-            throw new Error('Source must be linear, github, jira, or gitlab');
+            throw new Error('Source must be linear, github, jira, gitlab, or bbtasks');
           }
           const project = await requireProject();
           // Explicit --source/--query flags beat a --preset's saved values;
@@ -2161,14 +2235,14 @@ export default async function plugin(bb: BbPluginApi) {
         if (command === 'show') {
           if (args.positionals.length !== 2) {
             throw new Error(
-              'Usage: bb taskboard show <linear|github|jira|gitlab> <locator> [--project <proj_id>] [--json]'
+              'Usage: bb taskboard show <linear|github|jira|gitlab|bbtasks> <locator> [--project <proj_id>] [--json]'
             );
           }
           const project = await requireProject();
           const parsedSource = workSourceSchema.safeParse(args.positionals[0]);
           const locator = args.positionals[1]!;
           if (!parsedSource.success) {
-            throw new Error('Source must be linear, github, jira, or gitlab');
+            throw new Error('Source must be linear, github, jira, gitlab, or bbtasks');
           }
           const item = await getLiveItem(
             project.id,
@@ -2185,13 +2259,13 @@ export default async function plugin(bb: BbPluginApi) {
         if (command === 'transitions') {
           if (args.positionals.length !== 2) {
             throw new Error(
-              'Usage: bb taskboard transitions <linear|github|jira|gitlab> <locator> [--project <proj_id>] [--json]'
+              'Usage: bb taskboard transitions <linear|github|jira|gitlab|bbtasks> <locator> [--project <proj_id>] [--json]'
             );
           }
           const project = await requireProject();
           const parsedSource = workSourceSchema.safeParse(args.positionals[0]);
           if (!parsedSource.success) {
-            throw new Error('Source must be linear, github, jira, or gitlab');
+            throw new Error('Source must be linear, github, jira, gitlab, or bbtasks');
           }
           const locator = args.positionals[1]!;
           const options = await liveStatusOptions(
@@ -2225,13 +2299,13 @@ export default async function plugin(bb: BbPluginApi) {
         if (command === 'move') {
           if (args.positionals.length !== 2 || !args.statusId) {
             throw new Error(
-              'Usage: bb taskboard move <linear|github|jira|gitlab> <locator> --status <id> [--project <proj_id>] [--json]'
+              'Usage: bb taskboard move <linear|github|jira|gitlab|bbtasks> <locator> --status <id> [--project <proj_id>] [--json]'
             );
           }
           const project = await requireProject();
           const parsedSource = workSourceSchema.safeParse(args.positionals[0]);
           if (!parsedSource.success) {
-            throw new Error('Source must be linear, github, jira, or gitlab');
+            throw new Error('Source must be linear, github, jira, gitlab, or bbtasks');
           }
           const item = await updateItemStatus(
             project.id,
@@ -2249,14 +2323,14 @@ export default async function plugin(bb: BbPluginApi) {
         if (command === 'config') {
           if (args.positionals.length > 0) {
             throw new Error(
-              'Usage: bb taskboard config [--project <proj_id>] [--source linear|github|jira|gitlab] [--linear-team <key>] [--jira-url <url>] [--jira-email <email>] [--jira-jql <text>] [--gitlab-project <ref>] [--json]'
+              'Usage: bb taskboard config [--project <proj_id>] [--source linear|github|jira|gitlab|bbtasks] [--linear-team <key>] [--jira-url <url>] [--jira-email <email>] [--jira-jql <text>] [--gitlab-project <ref>] [--bb-tasks-project <id-or-prefix>] [--json]'
             );
           }
           const parsedSource = args.source
             ? workSourceSchema.safeParse(args.source)
             : null;
           if (parsedSource && !parsedSource.success) {
-            throw new Error('--source must be linear, github, jira, or gitlab');
+            throw new Error('--source must be linear, github, jira, gitlab, or bbtasks');
           }
           if (args.jiraJql !== undefined && !args.jiraJql.trim()) {
             throw new Error('--jira-jql requires a non-empty value');
@@ -2270,6 +2344,12 @@ export default async function plugin(bb: BbPluginApi) {
               );
             }
           }
+          if (
+            args.bbTasksProject !== undefined &&
+            !args.bbTasksProject.trim()
+          ) {
+            throw new Error('--bb-tasks-project requires a non-empty value');
+          }
           const project = await requireProject();
           const snapshot = await readCredentialFormSnapshot(project.id);
           const previous = snapshot.config;
@@ -2280,7 +2360,8 @@ export default async function plugin(bb: BbPluginApi) {
             args.jiraUrl !== undefined ||
             args.jiraEmail !== undefined ||
             args.jiraJql !== undefined ||
-            args.gitlabProject !== undefined;
+            args.gitlabProject !== undefined ||
+            args.bbTasksProject !== undefined;
           const config = changed
             ? await persistProjectConfig(
                 {
@@ -2294,6 +2375,8 @@ export default async function plugin(bb: BbPluginApi) {
                   jiraJql: args.jiraJql ?? previous.jiraJql,
                   gitlabProjectRef:
                     args.gitlabProject ?? previous.gitlabProjectRef,
+                  bbTasksProjectId:
+                    args.bbTasksProject ?? previous.bbTasksProjectId,
                   linearCredential: KEEP_SECRET,
                   jiraCredential: KEEP_SECRET
                 },
@@ -2361,6 +2444,7 @@ export default async function plugin(bb: BbPluginApi) {
               jiraEmail: previous.jiraEmail,
               jiraJql: previous.jiraJql,
               gitlabProjectRef: previous.gitlabProjectRef,
+              bbTasksProjectId: previous.bbTasksProjectId,
               linearCredential: response.linearCredential,
               jiraCredential: response.jiraCredential
             },

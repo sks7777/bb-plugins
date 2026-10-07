@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "id": "qa-8ca733e61e1b27bf7667551d",
+  "criteria": [
+    "AC-1",
+    "AC-2",
+    "AC-3",
+    "AC-4",
+    "AC-5",
+    "AC-6",
+    "AC-7",
+    "AC-8",
+    "AC-9",
+    "AC-UI-1",
+    "AC-UI-2",
+    "AC-UI-3"
+  ],
+  "evidenceKinds": [
+    "test"
+  ],
+  "summary": "Verify (rev 10) qa-unit execution of workspace-check for the BB Tasks source feature.",
+  "passed": true,
+  "startedAt": "2026-10-06T18:54:50.009Z",
+  "completedAt": "2026-10-06T18:55:36.571Z",
+  "provenance": {
+    "repositoryId": "sha256:703b13956fbeb2dfe9d4cf7c34077de56a5c348c0f42f9ceef5c1cac794fbf42",
+    "feature": "add-bb-tasks-the-official-bb-tasks-plugin-as-a",
+    "specRevision": 2,
+    "specDigest": "sha256:c0a35f1991cd987d03426579604c71d8c3387cc972875685d821717fa1c72801",
+    "treeDigest": "sha256:06eb327498b1a677518abc74836a441831b08bc687af3caf4e79eafe020d1b00",
+    "policyDigest": "sha256:c0bb465cea36f5a850cea8597bfb6db1e785851d9cad42c0517df2151d688c85",
+    "workflowRevision": 10,
+    "gitCommit": "a35488154c2f251bc66ea32351237c9c743a8b53",
+    "textTreeDigest": "sha256:06eb327498b1a677518abc74836a441831b08bc687af3caf4e79eafe020d1b00"
+  },
+  "digest": "sha256:d70df9ec8bd13f2f6789175dfba40dc428d0d772ab7438ef61a069c8531364cf",
+  "kind": "qa",
+  "matrixDigest": "sha256:6899e48c9a488e9136bcf6439e47a7b3fd44c34843dc62b860675432144a44fc",
+  "check": {
+    "id": "qa-unit",
+    "kind": "unit"
+  },
+  "coveredChecks": [
+    "unit"
+  ],
+  "platform": {
+    "os": "darwin",
+    "arch": "arm64",
+    "node": "26.7.0",
+    "bun": null
+  },
+  "attempts": [
+    {
+      "number": 1,
+      "outcome": "passed",
+      "summary": "Verify (rev 10) qa-unit execution of workspace-check for the BB Tasks source feature.",
+      "startedAt": "2026-10-06T18:54:50.009Z",
+      "completedAt": "2026-10-06T18:55:36.571Z",
+      "durationMs": 46562,
+      "collector": null,
+      "command": {
+        "executableDigest": "sha256:6f6b821881c80f8aacc718d5c4010dfc33bae3f3cbd436200a5684adb5916dd5",
+        "argv": [
+          "npm",
+          "run",
+          "check"
+        ],
+        "cwd": ".",
+        "timeoutMs": 900000,
+        "maxOutputBytes": 1048576,
+        "environmentKeys": [
+          "NO_COLOR",
+          "PATH",
+          "TMPDIR"
+        ]
+      },
+      "result": {
+        "exitCode": 0,
+        "signal": null,
+        "timedOut": false,
+        "stdoutDigest": "sha256:c0010767f6ec82e8ff79dc5f3c94ad6d87b880d1addf76891bd5fd83b392baa2",
+        "stderrDigest": "sha256:72a826a56ff005ae02f0c381cbfd6125b04d126e57b2991f6d634661a8d530fe",
+        "stdoutTail": "ehavior setting with safe defaults (0.59975ms)\n  ✔ registers one settings preview and reads live settings (0.203958ms)\n  ✔ edits durable project-id colors and paints only project letter badges (0.194125ms)\n  ✔ uses optional metadata and layout preferences without changing defaults (0.09375ms)\n  ✔ uses a semantic full-row selection target and keeps navigation separate (0.128ms)\n✔ Dockside settings contract (3.636625ms)\n▶ isUnread\n  ✔ is bb's own rule: last read has to catch up with last attention (0.526083ms)\n  ✔ treats a never-read thread as unread (0.075417ms)\n✔ isUnread (1.643708ms)\n▶ isWithinSettledWindow\n  ✔ keeps a settle from inside the window (0.213625ms)\n  ✔ drops a settle older than the window (0.081541ms)\n  ✔ keeps a settle stamped in the future (0.058416ms)\n  ✔ is a day by default (0.054ms)\n✔ isWithinSettledWindow (0.559666ms)\n▶ settledIndicator\n  ✔ draws nothing for a quiet thread (0.61875ms)\n  ✔ puts a raised hand above everything else (0.078584ms)\n  ✔ reports live work from the status (0.071542ms)\n  ✔ reports live work from an activity count alone (0.099334ms)\n  ✔ separates an unread failure from an unread success (0.162459ms)\n✔ settledIndicator (1.349625ms)\n▶ toSidebarThread\n  ✔ marks the thread archived, which is why this path exists (0.131916ms)\n  ✔ keeps only the origin kinds this sidebar draws (0.082083ms)\n  ✔ carries the fields the list sorts, filters, and searches on (0.134959ms)\n✔ toSidebarThread (0.426666ms)\n▶ mergeSettledThreads\n  ✔ adds the settled threads the host cannot report (0.196583ms)\n  ✔ lets the host win a collision (0.05575ms)\n  ✔ returns the host list unchanged when nothing is settled (0.058167ms)\n✔ mergeSettledThreads (0.387208ms)\n▶ pendingSettledCount\n  ✔ counts a settled thread the host cannot report (0.110417ms)\n  ✔ ignores a row that is not settled (0.036792ms)\n  ✔ ignores a settled thread the host still reports (0.043333ms)\n  ✔ drops a settle that has aged out of the window (0.148292ms)\n  ✔ counts each pending row once and nothing else (0.086166ms)\n  ✔ counts nothing when no row was seeded (0.058375ms)\n  ✔ reads any iterable of rows (0.050708ms)\n✔ pendingSettledCount (0.641458ms)\n▶ parseArchivedThreadIds\n  ✔ reads back what settle stored (0.08475ms)\n  ✔ gives nothing back for a missing or unusable value (0.076042ms)\n✔ parseArchivedThreadIds (0.20275ms)\n▶ statusColorRole\n  ✔ separates error, waiting, unread, working, and idle roles (0.601208ms)\n✔ statusColorRole (1.197834ms)\n▶ groupFamiliesByStatus\n  ✔ orders semantic sections, omits empty sections, and includes each family once (9.979416ms)\n✔ groupFamiliesByStatus (10.582542ms)\n▶ compact root card contract\n  ✔ keeps zero-child and no-PR roots on the same two-row skeleton (0.66975ms)\n  ✔ co-locates root PR and multiple-child controls in row two (0.113958ms)\n  ✔ looks up PR data only for the parent and never on child rows (0.102833ms)\n  ✔ truncates long title and branch text without shrinking metadata (0.093333ms)\n  ✔ keeps semantic, disclosure, provider, and reorder help keyboard-readable (0.188792ms)\n  ✔ keeps child status and disclosure-provider help keyboard-readable (0.074708ms)\n✔ compact root card contract (1.97025ms)\n▶ family status\n  ✔ uses the newest member update and requires every member to be quiet (0.492458ms)\n✔ family status (1.0385ms)\n▶ filterProjectThreadGroups\n  ✔ supports attention and quiet presets (0.566084ms)\n  ✔ uses inclusive family age boundaries (0.097291ms)\n  ✔ preserves project and family order without mutating the input (0.111917ms)\n✔ filterProjectThreadGroups (0.902125ms)\n▶ thread filter presentation\n  ✔ describes every preset once in the intended menu hierarchy (0.122084ms)\n✔ thread filter presentation (0.189917ms)\n▶ bulkEligibility\n  ✔ protects the current, working, waiting, unread, and pinned family (0.356958ms)\n  ✔ allows a quiet read family (0.147958ms)\n✔ bulkEligibility (0.728333ms)\n▶ selection helpers\n  ✔ selects eligible visible roots and prunes roots that disappeared (0.194458ms)\n  ✔ keeps a selected family visible after it stops matching the filter (0.151875ms)\n✔ selection helpers (0.444625ms)\n▶ applyRootSelection\n  ✔ ordinary clicks toggle one root and replace the anchor (0.189166ms)\n  ✔ selects inclusive forward and reverse Shift ranges (0.102584ms)\n  ✔ uses the clicked checked state to deselect a range (0.052416ms)\n  ✔ skips protected gaps omitted from eligible order (0.048333ms)\n  ✔ falls back to one toggle when the anchor is no longer visible (0.039667ms)\n  ✔ fails closed when the target is no longer eligible (0.040833ms)\n✔ applyRootSelection (0.562042ms)\n▶ resolveFamilyExpanded\n  ✔ keeps a family with no children closed (0.061375ms)\n  ✔ opens a child family by default and while search forces it (0.033625ms)\n  ✔ respects explicit open and closed overrides (0.0325ms)\n  ✔ uses the configured default until search or a user override wins (0.057416ms)\n✔ resolveFamilyExpanded (0.24ms)\n▶ decodeWarmStartRows\n  ✔ round-trips what encodeWarmStartRows wrote (0.946209ms)\n  ✔ reads nothing stored as a miss (0.085292ms)\n  ✔ reads unparseable text as a miss (0.076834ms)\n  ✔ reads a payload that is not an array as a miss (0.061083ms)\n  ✔ keeps a hit with no rows apart from a miss (0.070208ms)\n  ✔ rejects a row without a usable thread id (0.069291ms)\n  ✔ rejects an entry that is not an object (0.05875ms)\n  ✔ rejects a timestamp the wire could not have produced (0.093125ms)\n  ✔ rejects a non-finite timestamp (0.073375ms)\n  ✔ reads an absent timestamp as null (0.1065ms)\n  ✔ rejects the whole payload when one row is bad (0.08175ms)\n  ✔ rejects more rows than the encoder would ever write (0.310583ms)\n  ✔ rejects an entry too long to be worth parsing (0.072958ms)\n✔ decodeWarmStartRows (2.923333ms)\n▶ encodeWarmStartRows\n  ✔ writes an array, which is the only shape that survives the trip (0.060708ms)\n  ✔ carries only the four fields a row is made of (0.154834ms)\n  ✔ caps the entry and keeps the newest parks (0.307584ms)\n  ✔ ranks a park by when it was made, not by when a snooze ends (0.173458ms)\n  ✔ keeps a fresh settle over a full cap of long snoozes (0.328833ms)\n✔ encodeWarmStartRows (1.333666ms)\n▶ readWarmStartRows\n  ✔ serves what was stored (0.263625ms)\n  ✔ does not throw when the store does (0.07525ms)\n  ✔ still serves from memory after the store failed (0.218167ms)\n  ✔ prefers the memory tier over what the store holds (0.087666ms)\n  ✔ drops an entry that did not decode (0.078584ms)\n  ✔ ignores an entry written under another version's key (0.066292ms)\n✔ readWarmStartRows (0.945042ms)\n▶ writeWarmStartRows\n  ✔ does not throw when the store does (0.0925ms)\n  ✔ writes under the versioned key (0.0565ms)\n  ✔ offers a refused value to the store again (0.087208ms)\n✔ writeWarmStartRows (0.311458ms)\n▶ decodeWarmStartProviders\n  ✔ round-trips providers (0.164417ms)\n  ✔ reads a miss as null (0.051958ms)\n  ✔ rejects a provider with no name to fall back to (0.038833ms)\n  ✔ rejects a provider whose name is blank (0.042667ms)\n  ✔ drops a logo that is not a same-origin path (0.15575ms)\n  ✔ drops a path that resolves onto another host (0.070125ms)\n  ✔ drops a path carrying the characters that end a CSS token (0.048916ms)\n  ✔ rejects an entry too long to be worth parsing (0.038125ms)\n✔ decodeWarmStartProviders (0.742042ms)\n▶ encodeWarmStartProviders\n  ✔ carries only the three fields the glyph reads (0.045625ms)\n✔ encodeWarmStartProviders (0.079084ms)\n▶ readWarmStartProviders\n  ✔ serves what was stored (0.081291ms)\n  ✔ survives a store that throws on every call (0.068833ms)\n  ✔ drops an entry that did not decode (0.055583ms)\n  ✔ ignores an entry written under another version's key (0.040834ms)\n✔ readWarmStartProviders (0.318958ms)\n▶ writeWarmStartProviders\n  ✔ does not throw when the store does (0.062833ms)\n  ✔ keeps its own versioned key (0.053292ms)\n✔ writeWarmStartProviders (0.158167ms)\nℹ tests 206\nℹ suites 59\nℹ pass 206\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 444.858625\n\n> bb-plugin-dockside@0.1.5 build\n> bb plugin build .\n\nThis plugin vendors types/ — `bb plugin migrate` switches it to the @get-bb/plugin-sdk npm package.\ndist/server.js\ndist/server.js.map\ndist/server.meta.json\ndist/app.js\ndist/app.css\ndist/app.meta.json\n",
+        "stderrTail": "(node:57106) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.\n(Use `node --trace-deprecation ...` to show where the warning was created)\n(node:57821) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.\n(Use `node --trace-deprecation ...` to show where the warning was created)\n(node:58379) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.\n(Use `node --trace-deprecation ...` to show where the warning was created)\n(node:59144) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.\n(Use `node --trace-deprecation ...` to show where the warning was created)\n(node:59945) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.\n(Use `node --trace-deprecation ...` to show where the warning was created)\n(node:62774) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.\n(Use `node --trace-deprecation ...` to show where the warning was created)\n(node:64527) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.\n(Use `node --trace-deprecation ...` to show where the warning was created)\n(node:66532) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.\n(Use `node --trace-deprecation ...` to show where the warning was created)\n(node:67164) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.\n(Use `node --trace-deprecation ...` to show where the warning was created)\n",
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      "cleanStart": true,
+      "sourceTreeBefore": "sha256:06eb327498b1a677518abc74836a441831b08bc687af3caf4e79eafe020d1b00",
+      "sourceTreeAfter": "sha256:06eb327498b1a677518abc74836a441831b08bc687af3caf4e79eafe020d1b00",
+      "artifacts": []
+    }
+  ],
+  "anomalies": []
+}

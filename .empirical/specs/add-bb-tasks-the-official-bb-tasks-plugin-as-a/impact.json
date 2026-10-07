@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "classification": "behavioral",
+  "capabilities": [
+    "bb-tasks-source"
+  ],
+  "surfaces": [
+    "workflow"
+  ],
+  "regressionRationale": null,
+  "digest": "sha256:16340d855dce4acf1972e0685cfe9c82acba3a1aac952eb9e718523523328d1c"
+}

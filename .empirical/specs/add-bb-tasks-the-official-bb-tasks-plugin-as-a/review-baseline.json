@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "resultPath": ".empirical/specs/add-bb-tasks-the-official-bb-tasks-plugin-as-a/reviews/39b96c78c1e72a24b3ad23f0.json",
+  "resultDigest": "sha256:39b96c78c1e72a24b3ad23f0ee34be811e71dfdf0b8c789cf98489d0f85d7070",
+  "contractDigest": "sha256:a7671bcf7a01dabad12179d6fb5b3b91ca14dd2b1eb557ae2a4e5d29d7a85599",
+  "carriedDeferred": [
+    {
+      "id": "F-3",
+      "severity": "low",
+      "category": "design",
+      "summary": "Adapter 'enabled' flag hardcoded true makes the disabled branch unreachable (accepted by author)"
+    }
+  ]
+}

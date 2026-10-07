@@ -1,0 +1,3 @@
+# empirical-sdd:managed-file
+policy:
+  allow_implicit_invocation: false

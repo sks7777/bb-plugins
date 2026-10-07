@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "feature": "add-bb-tasks-the-official-bb-tasks-plugin-as-a",
+  "claimId": "add-bb-tasks-the-official-bb-tasks-plugin-as-a-2c636970f223",
+  "repositoryId": "sha256:703b13956fbeb2dfe9d4cf7c34077de56a5c348c0f42f9ceef5c1cac794fbf42",
+  "baseCommit": "ff4dec1308f8ae69d040eebdf77863182c7a45ca",
+  "baseTree": "9eade31a967c07001fea8523deb88097431fc03b",
+  "featureTree": "sha256:06eb327498b1a677518abc74836a441831b08bc687af3caf4e79eafe020d1b00",
+  "targetCommit": "ff4dec1308f8ae69d040eebdf77863182c7a45ca",
+  "targetTree": "9eade31a967c07001fea8523deb88097431fc03b",
+  "capabilityBaseDigests": {
+    "bb-tasks-source": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "deltaDigest": "sha256:1dde8414c7c9d30684aaab93e71e50da53161669060b8ef7f0f3f68888d4cf9f",
+  "resultDigests": {
+    "bb-tasks-source": "sha256:3e8df215a3e29ca545401b1623ee31027e5b06e04cfb711344183951d7f10bbd"
+  },
+  "verificationReceiptDigests": [
+    "sha256:974a324f30822694f4fe9b01c21f6142099a9e8928a662b9bb6cc259fe23cd0a"
+  ],
+  "promotionRoute": {
+    "mode": "auto",
+    "route": "local",
+    "reasons": [
+      {
+        "code": "REMOTE_CHECKS_NOT_CONFIGURED"
+      },
+      {
+        "code": "REMOTE_TARGET_BASE_UNRESOLVED",
+        "paths": [
+          "delivery.targetBranch"
+        ]
+      }
+    ]
+  },
+  "integratedAt": "2026-10-07T01:47:22.695Z",
+  "digest": "sha256:af0fc236d93aeb2c804f3ebddd8fdad5d428b4562dba610c90b2f2e7f7700051"
+}

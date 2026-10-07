@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "packetDigest": "sha256:8370cb1cb350c06aa16582e0438700700a853b25ba53a0b61d51a24173c54067",
+  "resultPath": ".empirical/specs/add-bb-tasks-the-official-bb-tasks-plugin-as-a/reviews/39b96c78c1e72a24b3ad23f0.json",
+  "resultDigest": "sha256:39b96c78c1e72a24b3ad23f0ee34be811e71dfdf0b8c789cf98489d0f85d7070",
+  "receiptId": "collected-637c64db332bc3788ef2a318",
+  "reReview": {
+    "previousResultDigest": "sha256:d226c474154cfd4cdec25cd6c9b849eb89a273e9169cd8fdf3dd68cbb9fbbc41",
+    "previousBaseCommit": "ff4dec1308f8ae69d040eebdf77863182c7a45ca",
+    "previousHeadCommit": "58f8dd6e4df126215fedf09025c3eeca728768c3",
+    "previousVerdict": "APPROVED",
+    "previousReview": "# Verdict: APPROVED\n\n- PASS AC-1: Unchanged by delta: TRACKER_OPTIONS adds bbtasks ('BB Tasks'); save persists source + bbTasksProjectId via saveProjectConfig to bb_tasks_project_id and survives reload.\n- PASS AC-2: Unchanged by delta: list() resolves linked project (override wins), maps key/title/status/priority/labels/updatedAt from Tasks RPC, cached through syncOne -> replaceSource.\n- PASS AC-3: Unchanged by delta: get() uses getTaskByKey + listComments + listLabels, labels resolved to names, comments mapped.\n- PASS AC-4: Unchanged by delta: six statuses, in_review->in_progress mapping, updateStatus routes tasks updateTask with authorName 'Taskboard'.\n- PASS AC-5: Spot-checked at 58f8dd6e: happy path unchanged (destinationLabel 'Tasks project', 6 statuses/5 priorities/labels/dueDate metadata, createTask, mention labeled with item.key); with F-4's fix an unresolvable destination now yields the specific problem message instead of only the generic fallback.\n- PASS AC-6: Spot-checked at 58f8dd6e: missing plugin/link still surface in board status (setSourceError) and create-issue context (available=false, no crash); the context message is now the specific resolution problem where one exists.\n- PASS AC-7: Unchanged by delta: three tables recreated with 'bbtasks' CHECK constraints, rows copied, indexes recreated 1:1, bb_tasks_project_id added with '' default.\n- PASS AC-8: Spot-checked at 58f8dd6e: usage strings, --source validation, and --bb-tasks-project all accept bbtasks; the five source-validation error texts now match the advertised sources.\n- PASS AC-9: Spot-checked at 58f8dd6e: contract test updated for the new placeholder; taskboard npm run check green (155/155 tests, build + verify:build pass); root-check-only failure remains the pre-existing unrelated steel-browser Node-26 flag issue.\n- PASS AC-UI-1: Unchanged by delta: SourceGlyph + 'BB Tasks' in tracker options, SourceMark on detail, glyph on rows.\n- PASS AC-UI-2: Unchanged by delta: Tasks-project picker with linked marker; SOURCE_FILTER_OPTIONS includes bbtasks.\n- PASS AC-UI-3: Unchanged by delta: Open button hidden for empty URL; key, status menu, Add to chat retained.\n\n## Security / correctness\n\nNo security findings at 58f8dd6e: no credentials stored, Tasks-plugin RPC I/O host-validated through zod, mention ids revalidated, migration preserves rows. Correctness limited to the accepted low finding F-3.\n\n## Design / maintainability\n\nAdapter follows the established GitHub plugin-RPC pattern with locally declared schemas; migration follows the proven gitlab recreate pattern 1:1. One accepted low design note: the disabled-adapter branch is unreachable from server wiring (unit-tested).",
+    "openFindings": [],
+    "deferredFindings": [
+      {
+        "id": "F-3",
+        "severity": "low",
+        "category": "design",
+        "summary": "Adapter 'enabled' flag hardcoded true makes the disabled branch unreachable (accepted by author)"
+      }
+    ]
+  }
+}

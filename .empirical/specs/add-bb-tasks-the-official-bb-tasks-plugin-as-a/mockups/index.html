@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Taskboard — BB Tasks source mockup</title>
+<style>
+  :root {
+    --bg: #f7f7f8; --surface: #ffffff; --border: #e4e4e7; --muted: #71717a;
+    --fg: #18181b; --accent: #6d5bd0; --accent-soft: #efedfb;
+    --ok: #16a34a; --warn: #d97706; --done: #15803d; --canceled: #a1a1aa;
+    --todo: #6366f1; --progress: #0ea5e9;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 13px/1.45 -apple-system, "SF Pro Text", system-ui, sans-serif; color: var(--fg); background: var(--bg); }
+  .frame { max-width: 880px; margin: 24px auto; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+  header.top { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-bottom: 1px solid var(--border); }
+  header.top h1 { font-size: 13px; font-weight: 600; margin: 0; }
+  .tabs { margin-left: auto; display: flex; gap: 4px; }
+  .tabs button { border: 1px solid transparent; background: transparent; color: var(--muted); padding: 4px 10px; border-radius: 6px; font: inherit; cursor: pointer; }
+  .tabs button.on { background: var(--accent-soft); color: var(--accent); border-color: #ddd6f7; font-weight: 600; }
+  section { display: none; padding: 16px; }
+  section.on { display: block; }
+  .note { color: var(--muted); font-size: 12px; margin: 0 0 12px; }
+  .toolbar { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; }
+  .chip { border: 1px solid var(--border); border-radius: 999px; padding: 3px 10px; color: var(--muted); font-size: 12px; background: #fafafa; }
+  .chip.on { color: var(--accent); border-color: #ddd6f7; background: var(--accent-soft); font-weight: 600; }
+  .search { flex: 1; border: 1px solid var(--border); border-radius: 6px; padding: 5px 9px; color: var(--muted); background: #fafafa; }
+  .group { font-size: 11px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); margin: 12px 0 4px; }
+  .row { display: flex; align-items: center; gap: 8px; padding: 7px 8px; border-radius: 7px; }
+  .row:hover { background: #f4f4f5; }
+  .glyph { width: 16px; height: 16px; border-radius: 4px; background: var(--accent); color: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; flex: none; }
+  .key { color: var(--muted); font-variant-numeric: tabular-nums; min-width: 64px; }
+  .title { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pill { border-radius: 999px; padding: 2px 8px; font-size: 11px; font-weight: 600; }
+  .s-todo { color: var(--todo); background: #eef2ff; }
+  .s-progress { color: var(--progress); background: #e0f2fe; }
+  .s-review { color: #7c3aed; background: #f3e8ff; }
+  .s-done { color: var(--done); background: #dcfce7; }
+  .lbl { border: 1px solid var(--border); border-radius: 4px; padding: 1px 6px; font-size: 11px; color: var(--muted); }
+  .meta { color: var(--muted); font-size: 11px; }
+  .card { border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+  .kv { display: grid; grid-template-columns: 110px 1fr; gap: 4px 10px; margin: 10px 0; font-size: 12px; }
+  .kv dt { color: var(--muted); }
+  .btn { border: 1px solid var(--border); background: #fafafa; border-radius: 6px; padding: 5px 10px; font: inherit; cursor: pointer; }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+  dialog { border: 1px solid var(--border); border-radius: 10px; padding: 0; width: 520px; }
+  dialog::backdrop { background: rgba(0,0,0,.35); }
+  .dlg-head { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid var(--border); font-weight: 600; }
+  .dlg-body { padding: 14px 16px; display: grid; gap: 10px; }
+  label.f { display: grid; gap: 4px; font-size: 12px; color: var(--muted); }
+  label.f input, label.f select, label.f textarea { font: inherit; color: var(--fg); border: 1px solid var(--border); border-radius: 6px; padding: 6px 8px; background: #fff; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .dlg-foot { display: flex; justify-content: flex-end; gap: 8px; padding: 12px 16px; border-top: 1px solid var(--border); }
+  .manage-row { display: flex; gap: 10px; align-items: center; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; cursor: pointer; }
+  .manage-row.on { border-color: #ddd6f7; background: var(--accent-soft); }
+  .manage-row .name { font-weight: 600; }
+  .manage-row .desc { color: var(--muted); font-size: 12px; }
+  .tag { margin-left: auto; font-size: 11px; border: 1px solid var(--border); padding: 1px 8px; border-radius: 999px; color: var(--muted); }
+  .tag.on { color: var(--accent); border-color: #ddd6f7; background: #fff; }
+  .picker { border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; margin-top: 12px; }
+  .picker h3 { margin: 0 0 8px; font-size: 12px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
+  .badge-ok { color: var(--ok); font-size: 11px; display: inline-flex; align-items: center; gap: 4px; }
+</style>
+</head>
+<body>
+<div class="frame">
+  <header class="top">
+    <span class="glyph" style="background:var(--accent)">TB</span>
+    <h1>Taskboard · Project «Product» — tracker: <span style="color:var(--accent)">BB Tasks</span></h1>
+    <nav class="tabs">
+      <button class="on" data-t="board">Board</button>
+      <button data-t="detail">Detail</button>
+      <button data-t="create">Create</button>
+      <button data-t="manage">Manage</button>
+    </nav>
+  </header>
+
+  <section id="board" class="on">
+    <p class="note">Board rows come from the linked Tasks project PROD via the Tasks plugin RPC. Tasks statuses render as native Taskboard columns.</p>
+    <div class="toolbar">
+      <span class="search">Search…</span>
+      <span class="chip on">Status</span><span class="chip">Priority</span><span class="chip">Labels</span>
+    </div>
+    <div class="group">In Progress</div>
+    <div class="row"><span class="glyph">BT</span><span class="key">PROD-12</span><span class="title">Ship task delegation flow</span><span class="pill s-review">In Review</span><span class="lbl">agents</span><span class="meta">2h</span></div>
+    <div class="row"><span class="glyph">BT</span><span class="key">PROD-9</span><span class="title">Wire taskboard RPC adapter</span><span class="pill s-progress">In Progress</span><span class="meta">5h</span></div>
+    <div class="group">Todo</div>
+    <div class="row"><span class="glyph">BT</span><span class="key">PROD-14</span><span class="title">Document linked-project resolution</span><span class="pill s-todo">Todo</span><span class="lbl">docs</span><span class="meta">1d</span></div>
+    <div class="group">Done</div>
+    <div class="row"><span class="glyph">BT</span><span class="key">PROD-7</span><span class="title">Add bbtasks to source schema</span><span class="pill s-done">Done</span><span class="meta">2d</span></div>
+  </section>
+
+  <section id="detail">
+    <p class="note">BB Tasks tasks have no external URL — the Open button is hidden; key, status menu, and Add to chat stay.</p>
+    <div class="card">
+      <div style="display:flex;gap:10px;align-items:center;margin-bottom:6px;">
+        <span class="key" style="min-width:auto">PROD-12</span>
+        <button class="btn" style="padding:3px 8px;font-size:12px;">In Review ▾</button>
+        <span class="glyph">BT</span>
+        <span class="meta">BB Tasks · PROD</span>
+        <span style="flex:1"></span>
+        <button class="btn" style="padding:3px 8px;font-size:12px;">💬 Add to chat</button>
+      </div>
+      <h2 style="font-size:18px;margin:6px 0 10px;">Ship task delegation flow</h2>
+      <dl class="kv">
+        <dt>Status</dt><dd><span class="pill s-review">In Review</span></dd>
+        <dt>Priority</dt><dd>high</dd>
+        <dt>Labels</dt><dd><span class="lbl">agents</span> <span class="lbl">rpc</span></dd>
+        <dt>Due date</dt><dd>2026-10-09</dd>
+        <dt>Project</dt><dd>PROD (linked to this BB project)</dd>
+      </dl>
+      <p style="color:var(--fg)">Implement the flow and run focused validation. Delegate via presets once merged.</p>
+      <div style="border-top:1px solid var(--border);margin-top:12px;padding-top:10px;">
+        <div class="meta" style="margin-bottom:6px;">Comments · 2</div>
+        <div class="row" style="padding:4px 0"><span class="meta" style="min-width:70px">agent · 1h</span><span>Started validation, two presets pending.</span></div>
+        <div class="row" style="padding:4px 0"><span class="meta" style="min-width:70px">you · 3h</span><span>Split adapter and migration into separate commits.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="create">
+    <p class="note">Destination label is “Tasks project”; assignee, milestone, and issue-type fields are absent because Tasks has none.</p>
+    <div class="card" style="max-width:560px">
+      <div style="font-weight:600;margin-bottom:10px;">New issue · BB Tasks</div>
+      <div class="dlg-body" style="padding:0">
+        <label class="f">Tasks project
+          <select><option>PROD — Product (linked)</option><option>WEB — Website</option></select>
+        </label>
+        <label class="f">Title<input value="Polish taskboard sync errors"></label>
+        <label class="f">Description<textarea rows="3">Show per-source sync errors on the board header.</textarea></label>
+        <div class="two">
+          <label class="f">Status<select><option>backlog</option><option selected>todo</option><option>in_progress</option><option>in_review</option><option>done</option><option>canceled</option></select></label>
+          <label class="f">Priority<select><option>urgent</option><option selected>high</option><option>medium</option><option>low</option><option>none</option></select></label>
+        </div>
+        <div class="two">
+          <label class="f">Labels<select multiple size="3"><option>agents</option><option>rpc</option><option selected>ui</option></select></label>
+          <label class="f">Due date<input type="date" value="2026-10-12"></label>
+        </div>
+      </div>
+      <div class="dlg-foot" style="padding:12px 0 0">
+        <button class="btn">Cancel</button>
+        <button class="btn primary">Create</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="manage">
+    <p class="note">BB Tasks appears with the other trackers. Choosing it reveals the tasks-project picker; the linked project is marked.</p>
+    <div class="manage-row"><span class="glyph" style="background:#24292f">GH</span><span class="name">GitHub</span><span class="desc">Repository issues</span><span class="tag">uses BB github plugin</span></div>
+    <div class="manage-row"><span class="glyph" style="background:#fc6d26">GL</span><span class="name">GitLab</span><span class="desc">GitLab project issues</span><span class="tag">glab CLI</span></div>
+    <div class="manage-row"><span class="glyph" style="background:#5e6ad2">LN</span><span class="name">Linear</span><span class="desc">Team issues</span><span class="tag">API key</span></div>
+    <div class="manage-row"><span class="glyph" style="background:#0052cc">Ji</span><span class="name">Jira</span><span class="desc">JQL-filtered issues</span><span class="tag">API token</span></div>
+    <div class="manage-row on"><span class="glyph">BT</span><span class="name">BB Tasks</span><span class="desc">Linked Tasks projects · no credentials</span><span class="tag on">selected</span></div>
+    <div class="picker">
+      <h3>Tasks project</h3>
+      <div class="manage-row" style="margin:0 0 8px;border-color:#ddd6f7;background:#fff"><span class="name">PROD</span><span class="desc">Product</span><span class="badge-ok">● linked to this BB project</span><span class="tag on">auto</span></div>
+      <div class="manage-row" style="margin:0"><span class="name">WEB</span><span class="desc">Website</span><span class="tag">not linked</span></div>
+      <p class="note" style="margin:10px 0 0">Leave on the linked project for automatic resolution, or pick one explicitly. Sync statuses, board layout, and filters follow the shared project-view preferences.</p>
+    </div>
+  </section>
+</div>
+<script>
+  document.querySelectorAll('.tabs button').forEach(function(b){
+    b.addEventListener('click', function(){
+      document.querySelectorAll('.tabs button').forEach(function(x){x.classList.remove('on')});
+      document.querySelectorAll('section').forEach(function(x){x.classList.remove('on')});
+      b.classList.add('on');
+      document.getElementById(b.dataset.t).classList.add('on');
+    });
+  });
+</script>
+</body>
+</html>
