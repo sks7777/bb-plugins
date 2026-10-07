@@ -1,25 +1,25 @@
 {
   "schemaVersion": 1,
-  "sequence": 9,
-  "previousDigest": "sha256:2c2b2eb5c5557f8f3353cb018d4a5cbca706ecb4507d4c37bcec1fc8a039b161",
-  "actor": "agent",
-  "type": "transition",
-  "summary": "Implement re-entry after the verify repair loop: no source change since the reviewed fix commit; the implementation and verification evidence carry forward. Re-entering review so a fresh review receipt binds the current head and policy.",
-  "createdAt": "2026-10-06T18:43:19.331Z",
-  "stateBeforeDigest": "sha256:d99c5b5a183513fc1a9924d857401bbdcc25706b9f633cad79f7924a3b2c3b13",
-  "stateAfterDigest": "sha256:e745e1e46d9247f5fd64fc18d9133e5037d60dca6927edc994159501b021ef26",
+  "sequence": 14,
+  "previousDigest": "sha256:aa7aefa691f0ea0e96a9c230504fe6b7332b7536f1f43f58cad9ae123220bbd5",
+  "actor": "empirical-integrate",
+  "type": "compaction-boundary",
+  "summary": "Compacted through journal event 13",
+  "createdAt": "2026-10-07T01:47:24.474Z",
+  "stateBeforeDigest": "sha256:3fb0ba8fdee92f767b9679fef997fb7437495ccd8a11326ea47d72c2617a1947",
+  "stateAfterDigest": "sha256:3fb0ba8fdee92f767b9679fef997fb7437495ccd8a11326ea47d72c2617a1947",
   "state": {
     "schemaVersion": 5,
-    "revision": 9,
+    "revision": 13,
     "activeFeature": "add-bb-tasks-the-official-bb-tasks-plugin-as-a",
     "request": "Add BB Tasks (the official bb 'tasks' plugin) as a fifth tracker source 'bbtasks' in the taskboard plugin, at full parity with GitHub/GitLab/Linear/Jira.\n\nScope (approved plan: plans/2026-10-06_21-07_bb-tasks-taskboard-source.md):\n1. contract.ts: 'bbtasks' in workSourceSchema; bbTasksProjectId in projectSourceConfigSchema; bbTasksProjects list in projectConfigViewSchema; 'Tasks project' in destinationLabel enum; sourceName() -> 'BB Tasks'.\n2. New sources/bb-tasks.ts adapter implementing WorkSourceAdapter via bb.sdk.plugins.callRpc(pluginId:'tasks', ...) with locally re-declared zod schemas (listProjects with linkedBbProjectId, listTasks pagination, getTaskByKey, listComments, listLabels, createTask, updateTask); locator = task key; 6 fixed statuses mapped to workStateCategory (in_review -> in_progress); createIssueMetadata from fixed statuses/priorities + project labels; create via createTask; updateStatus via updateTask {authorName:'Taskboard'}; graceful configurationMessage when tasks plugin is missing.\n3. store.ts SQLite migration widening CHECK source enums on work_items_by_project/source_sync_by_project/project_source_config + bb_tasks_project_id column; config mapping updates.\n4. server.ts: SOURCES += 'bbtasks'; DEFAULT_PROJECT_CONFIG; adapters() branch; getCreateIssueContext destinations 'Tasks project' (linked tasks project default); changedSources/sameProjectConfig; CLI usage strings + --bb-tasks-project.\n5. app.tsx: SOURCE_FILTER_OPTIONS, TRACKER_OPTIONS, isWorkSource, sourceName, SourceGlyph, Manage tasks-project picker, hide Open button on empty url.\n6. Tests: contract.test.ts additions; new test/sources-bb-tasks.test.ts with fake callRpc.\n7. README sections + keywords + version 0.3.3 -> 0.4.0.\n\nUser decisions: source id 'bbtasks'; full write parity (issue creation + status moves); hide Open button when url is empty; updateStatus uses updateTask (not boardMove).",
     "profile": "complex",
     "workflow": "complex",
     "mode": "normal",
-    "phase": "review",
-    "status": "waiting",
-    "repairAttempts": 1,
-    "message": "Implement re-entry after the verify repair loop: no source change since the reviewed fix commit; the implementation and verification evidence carry forward. Re-entering review so a fresh review receipt binds the current head and policy.",
+    "phase": "done",
+    "status": "done",
+    "repairAttempts": 0,
+    "message": "Integrated capability changes: bb-tasks-source",
     "implementationActor": "agent",
     "workStartedAt": null,
     "specDigest": "sha256:c0a35f1991cd987d03426579604c71d8c3387cc972875685d821717fa1c72801",
@@ -30,23 +30,31 @@
     "capabilityClaimId": "add-bb-tasks-the-official-bb-tasks-plugin-as-a-2c636970f223",
     "authorizationDigest": null,
     "evidence": [],
-    "evidenceReceiptIds": [],
+    "evidenceReceiptIds": [
+      "collected-637c64db332bc3788ef2a318",
+      "qa-bf6ba0ade6cfc8597d77f052",
+      "qa-e880ade09a173f63af5ee6c2",
+      "qa-e0156a1a079502470d66b609",
+      "qa-7f9e6d9a63dcde816ca630da",
+      "qa-c0c095beb2c32db9c2530351",
+      "qa-8ca733e61e1b27bf7667551d",
+      "qa-a73b3f04eb3b7404eb1f6b95",
+      "collected-f8187accfe320f0949aff3bf"
+    ],
     "legacyEvidenceCount": 0,
     "completion": {
       "implemented": true,
-      "verified": false,
-      "integrated": false,
+      "verified": true,
+      "integrated": true,
       "delivered": false,
       "published": false,
-      "highest": "implemented",
+      "highest": "integrated",
       "reasons": {
-        "verified": "verified has not been proven by a durable receipt.",
-        "integrated": "integrated has not been proven by a durable receipt.",
         "delivered": "delivered has not been proven by a durable receipt.",
         "published": "published has not been proven by a durable receipt."
       }
     },
-    "updatedAt": "2026-10-06T18:43:19.331Z",
+    "updatedAt": "2026-10-07T01:47:23.376Z",
     "capabilityBase": {
       "schemaVersion": 1,
       "id": "add-bb-tasks-the-official-bb-tasks-plugin-as-a-2c636970f223",
@@ -89,7 +97,22 @@
       "actor": "agent",
       "revision": 2
     },
-    "reviewFirst": true
+    "budgetExtensionMinutes": 62,
+    "reviewFirst": true,
+    "completionRecord": {
+      "schemaVersion": 1,
+      "implementedBy": "agent",
+      "completedBy": "k.sidenko",
+      "decisionBy": null,
+      "method": "workflow",
+      "reason": "Integrated capability changes: bb-tasks-source",
+      "at": "2026-10-07T01:47:23.376Z",
+      "revision": 13,
+      "completion": "integrated",
+      "sourceTreeDigest": "sha256:1c17e03a12c880ce1ab4e909637068fdbc81e522a60078e7ce9ea708bae98916",
+      "artifactTreeDigest": "sha256:44814038b68d9a8a33ad5f99fed7d9a33ab4098240a2a67d339eebdbeff28607",
+      "digest": "sha256:20b828d15d66c0fdc671e62667dd283d6a9f0007d1182b53dc37b4f97cb96b64"
+    }
   },
-  "digest": "sha256:e5042b338af8e3a9031f3bd4543e2ed122d9cbf2a8caf8604a81314914151f9b"
+  "digest": "sha256:9872819a513a3eb2d7112acac7e7a974fc813391fae6fa574d3d3de9e57db435"
 }
